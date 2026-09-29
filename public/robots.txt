@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moments.xocoweb.workers.dev/sitemap-index.xml

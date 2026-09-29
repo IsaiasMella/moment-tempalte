@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Moments">
+  <rect width="32" height="32" fill="#25211d" />
+  <path
+    fill="#faf8f4"
+    d="M4 23v-1.4h1.9V10.4H4V9h5.6l6.4 9.6L22.4 9H28v1.4h-1.9v11.2H28V23h-6.9v-1.4H23V11.8l-6.4 9.6h-1.2L9 11.8v9.8h1.9V23Z"
+  />
+</svg>

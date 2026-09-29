@@ -1,0 +1,21 @@
+{
+  "name": "Moments",
+  "short_name": "Moments",
+  "description": "An image-led Astro theme for a solo wedding and portrait photographer: full-bleed openings, a masonry wall of work, and galleries packed into justified rows so no photograph is cropped to fit a grid.",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#f9f9f9",
+  "theme_color": "#f9f9f9",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

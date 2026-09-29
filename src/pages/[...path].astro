@@ -1,0 +1,14 @@
+---
+import { referencePages, renderReference } from '../lib/reference';
+
+export function getStaticPaths() {
+  return referencePages().map(({ route, file }) => ({
+    params: { path: route.replace(/\/$/, '') || undefined },
+    props: { file },
+  }));
+}
+
+const { file } = Astro.props;
+const html = renderReference(file, Astro.site?.origin ?? Astro.url.origin);
+---
+<Fragment set:html={html} />
