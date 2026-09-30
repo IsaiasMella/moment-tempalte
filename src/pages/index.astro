@@ -1,0 +1,33 @@
+---
+/**
+ * Home page: hero carousel of featured albums, the most recent other albums,
+ * then the studio teaser, testimonials and call to action from
+ * src/content/pages/home.yml.
+ *
+ * React/Next.js equivalent: app/page.tsx (a server component that loads the
+ * content and renders section components).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TileGrid from '../components/album/TileGrid.astro';
+import HomeCall from '../components/home/HomeCall.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import StudioTeaser from '../components/home/StudioTeaser.astro';
+import Testimonials from '../components/home/Testimonials.astro';
+import { HOME_HERO_SLIDES, PAGE_SIZE } from '../lib/archive';
+import { getAlbums, getPage } from '../lib/content';
+
+const page = await getPage('home');
+const albums = await getAlbums();
+
+// Featured albums first, topped up with the newest others; the grid shows the rest.
+const hero = [...albums.filter((album) => album.featured), ...albums.filter((album) => !album.featured)].slice(0, HOME_HERO_SLIDES);
+const recent = albums.filter((album) => !hero.includes(album)).slice(0, PAGE_SIZE);
+---
+<BaseLayout title="" fullTitle={page.seo.title || undefined} description={page.seo.description || undefined} header="over">
+  <h1 class="sr-only">{page.heading}</h1>
+  <HomeHero albums={hero} />
+  <section class="wrap section-tight home-work" id="work" aria-label="Recent work"><TileGrid albums={recent} /><div class="home-grid-foot"><a class="btn btn-outline" href="/work/"><span>Show more</span></a></div></section>
+  <StudioTeaser studio={page.studio} stories={albums.length} />
+  <Testimonials testimonials={page.testimonials} />
+  <HomeCall cta={page.cta} />
+</BaseLayout>

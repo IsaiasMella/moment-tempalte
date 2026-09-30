@@ -1,0 +1,14 @@
+---
+/**
+ * An audio player card with a title and optional caption.
+ * React/Next.js equivalent: <AudioCard src="…" title="…" /> around a native <audio>.
+ */
+interface Props {
+  src: string;
+  title: string;
+  caption?: string;
+}
+
+const { src, title, caption } = Astro.props;
+---
+<figure class="card card-audio"><div class="card-audio-body"><p class="card-audio-title">{title}</p>{caption && <p class="card-file-caption">{caption}</p>}<audio controls preload="none" src={src}><a href={src}>Download the audio</a></audio></div></figure>

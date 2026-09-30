@@ -1,0 +1,19 @@
+---
+/**
+ * A product/package card: title, description, an optional star rating (0–5) and
+ * a button.
+ * React/Next.js equivalent: <ProductCard title="…" rating={5} button={{ … }} />.
+ */
+interface Props {
+  title: string;
+  description?: string;
+  /** Number of filled stars out of five. */
+  rating?: number;
+  buttonLabel?: string;
+  buttonLink?: string;
+}
+
+const { title, description, rating, buttonLabel, buttonLink = '#' } = Astro.props;
+const stars = [1, 2, 3, 4, 5];
+---
+<div class="card card-product"><h4 class="card-product-title">{title}</h4>{description && <p class="card-product-description">{description}</p>}{rating !== undefined && <p class="card-product-rating" role="img" aria-label={`${rating} out of 5`}>{stars.map((star) => <svg class:list={{ 'is-active': star <= rating }} width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"></path></svg>)}</p>}{buttonLabel && <p class="card-product-foot"><a class="btn btn-accent" href={buttonLink}><span>{buttonLabel}</span></a></p>}</div>

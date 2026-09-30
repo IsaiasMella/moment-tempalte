@@ -1,0 +1,49 @@
+---
+/**
+ * An <img> for a content image given as a public path (`/_astro/…` theme photos,
+ * `/uploads/…` CMS uploads). Reads the file's size and variants at build time
+ * (src/lib/images.ts) and always renders `width`/`height`, so the browser
+ * reserves the box before the photo loads (no layout shift).
+ *
+ *   <ResponsiveImage src={album.cover.src} alt={album.cover.alt} widths={WIDTHS.tile}
+ *     sizes="(min-width: 40rem) 46vw, 92vw" autosize />
+ *
+ * React/Next.js equivalent: <Image src=… sizes=… priority /> from next/image.
+ */
+import { coverSizes, getImageData, srcsetFor } from '../lib/images';
+
+interface Props {
+  src: string;
+  alt: string;
+  /** Candidate widths for `srcset` (see WIDTHS in src/lib/images.ts). */
+  widths: readonly number[];
+  /** `sizes` attribute. Ignored when `cover` is set. */
+  sizes?: string;
+  /** Full-bleed image covering a box this many vh tall: computes `sizes` from the photo's aspect ratio. */
+  cover?: number;
+  /** Above the fold: load immediately. */
+  eager?: boolean;
+  /** fetchpriority="high" (only with `eager`; default true). */
+  priority?: boolean;
+  /** Let src/scripts/autosize.ts refine `sizes` to the rendered width. */
+  autosize?: boolean;
+  class?: string;
+}
+
+const { src, alt, widths, sizes, cover, eager = false, priority = true, autosize = false, class: className } = Astro.props;
+const image = await getImageData(src);
+const srcset = srcsetFor(image, widths) || undefined;
+---
+<img
+  class={className}
+  src={image.src}
+  srcset={srcset}
+  alt={alt}
+  sizes={cover !== undefined ? coverSizes(image, cover) : sizes}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager && priority ? 'high' : undefined}
+  decoding="async"
+  data-autosize={autosize ? 'true' : undefined}
+  width={image.width}
+  height={image.height}
+/>

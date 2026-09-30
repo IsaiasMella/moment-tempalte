@@ -1,0 +1,16 @@
+---
+/**
+ * A downloadable file (price list, contract…) with a title, caption and a meta
+ * line such as "PDF · 1 KB".
+ * React/Next.js equivalent: <FileCard href="…" title="…" meta="…" />.
+ */
+interface Props {
+  href: string;
+  title: string;
+  caption?: string;
+  meta?: string;
+}
+
+const { href, title, caption, meta } = Astro.props;
+---
+<a class="card card-file" href={href} download><span class="card-file-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5Z"></path><path d="M13.5 3v5.5H19"></path></svg></span><span class="card-file-body"><span class="card-file-title">{title}</span>{caption && <span class="card-file-caption">{caption}</span>}{meta && <span class="card-file-meta">{meta}</span>}</span></a>

@@ -1,0 +1,22 @@
+---
+/**
+ * A "quote" block: a large pull quote with an optional attribution.
+ * `text` is Markdown; a single paragraph is rendered without a <p> wrapper.
+ *
+ * React/Next.js equivalent: <blockquote>{children}<cite>{author}</cite></blockquote>.
+ */
+import { markdown } from '../../lib/markdown';
+
+interface Props {
+  text: string;
+  author?: string;
+  /** "alt": the alternative, accent-coloured style. */
+  variant?: 'default' | 'alt';
+}
+
+const { text, author, variant = 'default' } = Astro.props;
+const html = markdown(text);
+// One paragraph: keep only its content so the quote text sits directly in the blockquote.
+const body = html.startsWith('<p>') && html.indexOf('<p>', 1) === -1 ? html.slice(3, -4) : html;
+---
+<blockquote class:list={['pullquote', { 'pullquote-alt': variant === 'alt' }]}><Fragment set:html={body} />{author && <cite class="pullquote-attribution">{author}</cite>}</blockquote>

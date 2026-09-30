@@ -1,0 +1,25 @@
+---
+/**
+ * A button around a photograph that opens it in the full-screen viewer
+ * (src/components/Lightbox.astro). The viewer reads the data-lightbox-* attributes;
+ * frames sharing a group ("story") can be browsed with the arrows.
+ *
+ *   <LightboxFrame image={image} class="gallery-frame" label="Enlarge photograph 1 of 3">…img…</LightboxFrame>
+ *
+ * React/Next.js equivalent: <button onClick={() => openLightbox(image)}>{children}</button>.
+ */
+import type { AlbumImage } from '../../lib/schemas';
+import { getImageData, srcsetFor } from '../../lib/images';
+
+interface Props {
+  image: Pick<AlbumImage, 'src' | 'alt' | 'caption' | 'credit'>;
+  class: string;
+  /** Accessible name; the alt text is appended ("Enlarge photograph: <alt>"). */
+  label: string;
+  group?: string;
+}
+
+const { image, class: className, label, group = 'story' } = Astro.props;
+const data = await getImageData(image.src);
+---
+<button class={className} type="button" data-lightbox data-lightbox-group={group} data-lightbox-src={data.src} data-lightbox-srcset={srcsetFor(data, 'lightbox') || undefined} data-lightbox-alt={image.alt} data-lightbox-caption={image.caption ?? ''} data-lightbox-credit={image.credit ?? ''} aria-label={image.alt ? `${label}: ${image.alt}` : label}><slot /></button>

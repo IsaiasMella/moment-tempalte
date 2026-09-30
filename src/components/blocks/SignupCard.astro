@@ -1,0 +1,24 @@
+---
+/**
+ * A full-width mailing-list signup card. Like the footer form (NewsletterForm.astro)
+ * it posts to `forms.newsletterAction` from the site settings, and stays disabled
+ * with a note until one is set.
+ * React/Next.js equivalent: <SignupCard heading="…" sub="…" id="…" />.
+ */
+import { getSiteSettings } from '../../lib/content';
+
+interface Props {
+  heading: string;
+  sub?: string;
+  /** Unique id for the input on this page. */
+  id: string;
+  buttonLabel?: string;
+  placeholder?: string;
+}
+
+const { heading, sub, id, buttonLabel = 'Sign up', placeholder = 'you@example.com' } = Astro.props;
+const { forms } = await getSiteSettings();
+const action = forms.newsletterAction || undefined;
+const noteId = `${id}-note`;
+---
+<aside class="card card-full card-signup"><h2 class="card-signup-heading">{heading}</h2>{sub && <p class="card-signup-sub">{sub}</p>}<form class="subscribe-form" action={action} method="post" aria-describedby={action ? undefined : noteId}><div><label class="sr-only" for={id}>Email address</label><input id={id} class="field" type="email" name="email" autocomplete="email" placeholder={placeholder} required /></div><button type="submit" class="btn btn-accent" disabled={!action}><span>{buttonLabel}</span></button>{!action && <p id={noteId} class="form-note">Set a newsletter provider in src/config/site.ts to start collecting these.</p>}</form></aside>

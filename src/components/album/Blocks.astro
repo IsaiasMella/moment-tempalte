@@ -1,0 +1,36 @@
+---
+/**
+ * The body of an album: renders each content block from the CMS
+ * (text, heading, image, quote, gallery) with its component, inside `.prose`.
+ * Heading ids are unique per page ("the-long-walk-down", "…-1").
+ *
+ *   <Blocks blocks={album.blocks} />
+ *
+ * React/Next.js equivalent: `blocks.map((block) => { switch (block.type) … })`,
+ * the usual "portable text / page builder" renderer.
+ */
+import GithubSlugger from 'github-slugger';
+import Figure from './Figure.astro';
+import Gallery from './Gallery.astro';
+import Pullquote from './Pullquote.astro';
+import Prose from '../Prose.astro';
+import { markdown } from '../../lib/markdown';
+import type { AlbumBlock } from '../../lib/schemas';
+
+interface Props {
+  blocks: AlbumBlock[];
+}
+
+const { blocks } = Astro.props;
+const slugger = new GithubSlugger();
+const headingIds = blocks.map((block) => (block.type === 'heading' ? slugger.slug(block.text) : ''));
+---
+<Prose>{blocks.map((block, index) => {
+  switch (block.type) {
+    case 'text': return <Fragment set:html={markdown(block.body)} />;
+    case 'heading': return <h2 id={headingIds[index]}>{block.text}</h2>;
+    case 'image': return <Figure image={block} size={block.size} />;
+    case 'quote': return <Pullquote text={block.text} author={block.author} variant={block.style} />;
+    case 'gallery': return <Gallery images={block.images} caption={block.caption} />;
+  }
+})}</Prose>

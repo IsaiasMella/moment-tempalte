@@ -1,0 +1,15 @@
+---
+/**
+ * A highlighted note in the reading column, with an emoji and a colour:
+ * grey (quiet), blue (information), yellow (caution) or accent (brand colour).
+ * The slot holds the note's paragraphs.
+ * React/Next.js equivalent: <Callout color="blue" emoji="💡">{children}</Callout>.
+ */
+interface Props {
+  color?: 'grey' | 'blue' | 'yellow' | 'accent';
+  emoji?: string;
+}
+
+const { color = 'grey', emoji } = Astro.props;
+---
+<aside class={`card card-callout card-callout-${color}`}>{emoji && <span class="card-callout-emoji" aria-hidden="true">{emoji}</span>}<div><slot /></div></aside>

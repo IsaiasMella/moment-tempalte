@@ -1,0 +1,35 @@
+---
+/**
+ * /tag/<tag>/ (and /tag/<tag>/2/, …) — the albums with one tag. A page is
+ * generated for every tag used by a published album, so a new tag in the CMS
+ * gets its listing automatically; tag URLs come from `tagSlug()`.
+ *
+ * React/Next.js equivalent: app/tag/[tag]/[[...page]]/page.tsx with
+ * `generateStaticParams()` built from the tags found in the content.
+ */
+import type { GetStaticPaths, Page } from 'astro';
+import ArchivePage from '../../../components/archive/ArchivePage.astro';
+import { albumTags, ARCHIVE_COPY, PAGE_SIZE, tagSlug, tagUrl } from '../../../lib/archive';
+import { getAlbums, type AlbumEntry } from '../../../lib/content';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const albums = await getAlbums();
+  return [...albumTags(albums)].flatMap(([slug, label]) =>
+    paginate(albums.filter((album) => album.tags.some((tag) => tagSlug(tag) === slug)), {
+      params: { tag: slug },
+      props: { label },
+      pageSize: PAGE_SIZE,
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<AlbumEntry>;
+  /** The tag as written in the albums, e.g. "Destination". */
+  label: string;
+}
+
+const { page, label } = Astro.props;
+const copy = ARCHIVE_COPY.tag(label);
+---
+<ArchivePage page={page} base={`/tag/${tagSlug(label)}`} heading={label} lede={copy.lede} title={copy.title} description={copy.description} crumb={{ name: label, path: tagUrl(label) }} />

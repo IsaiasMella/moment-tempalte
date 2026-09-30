@@ -1,0 +1,28 @@
+---
+/**
+ * /work/, /work/2/, … — every published album, newest first, 12 per page.
+ *
+ * `[...page]` is an optional rest parameter: `undefined` for page 1 (/work/),
+ * "2" for /work/2/. `paginate()` creates one path per page and hands each page
+ * a `page` prop (its albums, page numbers and prev/next URLs).
+ *
+ * React/Next.js equivalent: app/work/[[...page]]/page.tsx with
+ * `generateStaticParams()` returning one entry per page.
+ */
+import type { GetStaticPaths, Page } from 'astro';
+import ArchivePage from '../../components/archive/ArchivePage.astro';
+import { ARCHIVE_COPY, PAGE_SIZE } from '../../lib/archive';
+import { getAlbums, type AlbumEntry } from '../../lib/content';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  return paginate(await getAlbums(), { pageSize: PAGE_SIZE });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<AlbumEntry>;
+}
+
+const { page } = Astro.props;
+const copy = ARCHIVE_COPY.work;
+---
+<ArchivePage page={page} base="/work" heading={copy.title} lede={copy.lede} title={copy.title} description={copy.description} current="all" />

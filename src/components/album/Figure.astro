@@ -1,0 +1,27 @@
+---
+/**
+ * An "image" block: one photograph at reading width (regular), wider than the
+ * text (wide) or edge to edge (full), opening in the lightbox.
+ *
+ * React/Next.js equivalent: a <Figure size="wide" /> component in an MDX/blocks renderer.
+ */
+import LightboxFrame from './LightboxFrame.astro';
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { AlbumImage } from '../../lib/schemas';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  image: AlbumImage;
+  size?: 'regular' | 'wide' | 'full';
+}
+
+const VARIANTS = {
+  regular: { className: 'card', sizes: '(min-width: 48rem) 608px, 94vw', widths: WIDTHS.regular },
+  wide: { className: 'card card-wide', sizes: '(min-width: 64rem) 1100px, 94vw', widths: WIDTHS.wide },
+  full: { className: 'card card-full', sizes: '100vw', widths: WIDTHS.full },
+} as const;
+
+const { image, size = 'wide' } = Astro.props;
+const variant = VARIANTS[size];
+---
+<figure class={variant.className}><LightboxFrame image={image} class="figure-frame" label="Enlarge photograph"><ResponsiveImage src={image.src} alt={image.alt} widths={variant.widths} sizes={variant.sizes} autosize /></LightboxFrame>{image.caption && <figcaption class="figure-caption">{image.caption}</figcaption>}</figure>

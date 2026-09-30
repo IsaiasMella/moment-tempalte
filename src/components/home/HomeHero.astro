@@ -1,0 +1,33 @@
+---
+/**
+ * Full-screen carousel of featured albums at the top of the home page:
+ * cover photo, category and month, title (links to the album) and lede.
+ * Server-rendered with the first slide visible; src/scripts/hero.ts adds
+ * autoplay, the dots and the pause button.
+ *
+ *   <HomeHero albums={featured} interval={6} />
+ *
+ * React/Next.js equivalent: a client-side <Carousel> fed by a server component.
+ */
+import ResponsiveImage from '../ResponsiveImage.astro';
+import { formatMonth } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  albums: AlbumEntry[];
+  /** Seconds per slide. */
+  interval?: number;
+}
+
+const { albums, interval = 6 } = Astro.props;
+---
+<section class="home-hero"><div class="home-hero-slides" data-hero data-slides={albums.length} style={`--hero-interval:${interval}s`}>{albums.map((album, index) => (
+  <div class:list={['home-hero-slide', { 'is-current is-staged': index === 0 }]} inert={index > 0}><div class="home-hero-media"><ResponsiveImage src={album.cover.src} alt={album.cover.alt} widths={WIDTHS.hero} cover={100} eager={index === 0} /></div><div class="home-hero-scrim"></div><div class="wrap home-hero-body"><p class="label meta-row home-hero-kicker"><span>{album.categoryLabel}</span><span>{formatMonth(album.date)}</span></p><h2 class="display home-hero-title"><a href={album.url}>{album.title}</a></h2><p class="lede home-hero-excerpt">{album.lede}</p></div></div>
+))}</div><div class="wrap home-hero-controls"><ul class="home-hero-dots">{albums.map((album, index) => (
+  <li><button type="button" class="home-hero-dot" data-hero-dot aria-current={index === 0 ? 'true' : 'false'} aria-label={`Show story ${index + 1}: ${album.title}`}></button></li>
+))}</ul><button type="button" class="icon-btn home-hero-pause" data-hero-pause aria-pressed="false" aria-label="Pause slideshow" data-label-pause="Pause slideshow" data-label-play="Play slideshow"><span class="hero-icon-pause"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5v14M15 5v14"></path></svg></span><span class="hero-icon-play"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z"></path></svg></span></button></div></section>
+
+<script>
+  import '../../scripts/hero';
+</script>

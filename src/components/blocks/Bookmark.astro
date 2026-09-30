@@ -1,0 +1,18 @@
+---
+/**
+ * A link preview card: title, description, site name and an optional thumbnail,
+ * opening in a new tab.
+ * React/Next.js equivalent: a <LinkPreview /> fed with a page's Open Graph data.
+ */
+interface Props {
+  url: string;
+  title: string;
+  description?: string;
+  /** Site name shown under the description. */
+  publisher?: string;
+  image?: string;
+}
+
+const { url, title, description, publisher, image } = Astro.props;
+---
+<a class="card card-bookmark" href={url} target="_blank" rel="noreferrer noopener"><span class="card-bookmark-body"><span class="card-bookmark-title">{title}</span>{description && <span class="card-bookmark-description">{description}</span>}<span class="card-bookmark-meta">{publisher && <span>{publisher}</span>}<span class="sr-only">(opens in a new tab)</span></span></span>{image && <span class="card-bookmark-thumb"><img src={image} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></span>}</a>

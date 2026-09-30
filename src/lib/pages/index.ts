@@ -4,7 +4,7 @@ import { applySiteSettings } from './site';
 import * as content from './content';
 
 /** Routes rendered by dedicated Astro pages (src/pages/*.astro) instead of the reference catch-all. */
-const astroRoutes = new Set(['privacy/', '404/']);
+const astroRoutes = new Set(['privacy/', '404/', 'studio/', 'pricing/', 'contact/', 'styleguide/']);
 
 export function isGeneratedRoute(route: string): boolean {
   return astroRoutes.has(route);

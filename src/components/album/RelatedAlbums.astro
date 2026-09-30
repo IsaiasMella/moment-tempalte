@@ -1,0 +1,24 @@
+---
+/**
+ * "More weddings": up to three other albums from the same category, with a
+ * link to the whole collection. Renders nothing when there are none.
+ *
+ * React/Next.js equivalent: a server component that filters the album list.
+ */
+import TileGrid from './TileGrid.astro';
+import { categoryUrl } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+
+interface Props {
+  album: AlbumEntry;
+  /** All published albums, newest first. */
+  albums: AlbumEntry[];
+  limit?: number;
+}
+
+const { album, albums, limit = 3 } = Astro.props;
+const related = albums.filter((other) => other.category === album.category && other.slug !== album.slug).slice(0, limit);
+---
+{related.length > 0 && (
+  <section class="wrap section" aria-labelledby="more-work"><div class="post-related-head"><h2 class="title-lg" id="more-work" data-reveal="up">More {album.categoryLabel.toLowerCase()}</h2><a class="arrow-link" href={categoryUrl(album.category)}><span>See all</span></a></div><TileGrid albums={related} heading="h3" /></section>
+)}

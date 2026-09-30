@@ -1,0 +1,15 @@
+---
+/**
+ * An embedded iframe (video, map…) in a 16:9 box so nothing jumps while it loads.
+ * React/Next.js equivalent: <Embed src="…" title="…" caption="…" />.
+ */
+interface Props {
+  src: string;
+  /** Accessible title of the iframe. */
+  title: string;
+  caption?: string;
+}
+
+const { src, title, caption } = Astro.props;
+---
+<figure class="card card-embed card-embed-ratio"><iframe src={src} title={title} allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>{caption && <figcaption class="figure-caption">{caption}</figcaption>}</figure>

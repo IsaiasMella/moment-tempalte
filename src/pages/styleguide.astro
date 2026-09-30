@@ -1,0 +1,128 @@
+---
+/**
+ * /styleguide/ — the theme's catalogue of every content element a story can carry:
+ * typography, quotes, lists, tables, photographs, galleries and the card blocks in
+ * src/components/blocks/. Plain prose elements are written as HTML right here;
+ * each card is its own component so you can see (and copy) its props.
+ * Not indexed by search engines.
+ *
+ * React/Next.js equivalent: a Storybook-like "kitchen sink" page (app/styleguide/page.tsx).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/PageHead.astro';
+import Prose from '../components/Prose.astro';
+import AudioCard from '../components/blocks/AudioCard.astro';
+import Bookmark from '../components/blocks/Bookmark.astro';
+import Callout from '../components/blocks/Callout.astro';
+import CtaCard from '../components/blocks/CtaCard.astro';
+import Embed from '../components/blocks/Embed.astro';
+import Figure from '../components/blocks/Figure.astro';
+import FileCard from '../components/blocks/FileCard.astro';
+import Gallery from '../components/blocks/Gallery.astro';
+import HeaderCard from '../components/blocks/HeaderCard.astro';
+import ProductCard from '../components/blocks/ProductCard.astro';
+import SignupCard from '../components/blocks/SignupCard.astro';
+import Toggle from '../components/blocks/Toggle.astro';
+import type { Photo } from '../components/blocks/types';
+
+/** Demo photographs; their width variants are pre-rendered in public/_astro/. */
+const regular: Photo = {
+  src: '/_astro/g2.CHbHPbCS_Z2cdS9B.webp',
+  srcset: '/_astro/g2.CHbHPbCS_Z1pY3bl.webp 600w, /_astro/g2.CHbHPbCS_WkvYB.webp 900w, /_astro/g2.CHbHPbCS_Z2cdS9B.webp 1067w',
+  lightboxSrcset: '/_astro/g2.CHbHPbCS_Z2cdS9B.webp 1067w',
+  alt: 'Bride in a lace gown at sunset, the groom behind her.',
+  width: 1067,
+  height: 1600,
+};
+const wide: Photo = {
+  src: '/_astro/g4.DTSxkYud_ZdUxsy.webp',
+  srcset: '/_astro/g4.DTSxkYud_Z1XS5sp.webp 600w, /_astro/g4.DTSxkYud_1C7Dlo.webp 900w, /_astro/g4.DTSxkYud_1LSzJW.webp 1200w, /_astro/g4.DTSxkYud_ZdUxsy.webp 1600w',
+  lightboxSrcset: '/_astro/g4.DTSxkYud_1LSzJW.webp 1200w, /_astro/g4.DTSxkYud_ZdUxsy.webp 1600w',
+  alt: 'A couple on a beach at sunset.',
+  width: 1600,
+  height: 1068,
+};
+const full: Photo = {
+  src: '/_astro/cover.DFSdE5Xa_Z1WHDYr.webp',
+  srcset: '/_astro/cover.DFSdE5Xa_Z24rKeI.webp 600w, /_astro/cover.DFSdE5Xa_2tyKmf.webp 900w, /_astro/cover.DFSdE5Xa_ZAgtSb.webp 1200w, /_astro/cover.DFSdE5Xa_ZWfww1.webp 1600w, /_astro/cover.DFSdE5Xa_1c27qx.webp 2000w, /_astro/cover.DFSdE5Xa_Z1WHDYr.webp 2400w',
+  lightboxSrcset: '/_astro/cover.DFSdE5Xa_ZAgtSb.webp 1200w, /_astro/cover.DFSdE5Xa_ZWfww1.webp 1600w, /_astro/cover.DFSdE5Xa_Z1WHDYr.webp 2400w',
+  alt: 'Bride and groom embracing beneath sunlit stone arches.',
+  width: 2400,
+  height: 1600,
+};
+
+/** Builds a gallery photo from its file stem, available widths and size. */
+const photo = (stem: string, widths: number[], lightboxWidths: number[], alt: string, width: number, height: number, ids: Record<number, string>): Photo => ({
+  src: `/_astro/${stem}_${ids[width]}.webp`,
+  srcset: widths.map((w) => `/_astro/${stem}_${ids[w]}.webp ${w}w`).join(', '),
+  lightboxSrcset: lightboxWidths.map((w) => `/_astro/${stem}_${ids[w]}.webp ${w}w`).join(', '),
+  alt,
+  width,
+  height,
+});
+const gallery: Photo[] = [
+  photo('g1.DH3fJqZv', [400, 600, 900, 1200, 1333], [1200, 1333], 'A long table laid for dinner on a terrace.', 1333, 2000, { 400: 'EARsO', 600: '2aUpmx', 900: 'ZvW9gr', 1200: 'XCEwG', 1333: 'Z22M28l' }),
+  photo('g2.JRZGeFBg', [400, 600, 900, 1067], [1067], 'Place settings and folded linen.', 1067, 1600, { 400: '2oMFfm', 600: 'Z1a4UEQ', 900: '1deDv6', 1067: 'MzM1H' }),
+  photo('g3.Dy4m3vq6', [400, 600, 900, 1200, 1600], [1200, 1600], 'Guests raising glasses at dusk.', 1600, 1068, { 400: 'ZztYoE', 600: '2bgC08', 900: 'H5d00', 1200: 'Z1gl51z', 1600: '1N1UyQ' }),
+  photo('g4.BVD-flW-', [400, 600, 900, 1067], [1067], 'Candles down the centre of a table.', 1067, 1600, { 400: 'ZnN5tK', 600: '17vroX', 900: 'Z1zm7e1', 1067: 'xhu12' }),
+  photo('g5.D54N9qZp', [400, 600, 900, 1200, 1600], [1200, 1600], 'A cake on a side table.', 1600, 1067, { 400: '294aOj', 600: 'ZamlzP', 900: 'SBliM', 1200: 'Zud0i7', 1600: 'Z2v28vC' }),
+  photo('g6.EBeR-1kG', [400, 600, 900, 1200, 1600], [1200, 1600], 'The terrace after dark, lit by bulbs.', 1600, 1197, { 400: '2uKjwy', 600: '8Neyv', 900: 'Z1q4Fqi', 1200: 'Z11gvxX', 1600: 'ZS2KNB' }),
+];
+---
+<BaseLayout title="Styleguide" description="Every element the theme styles, in one place." noindex>
+  <PageHead title="Styleguide" lede="Every block a story can carry, styled by the theme. Open this page's source to see how each one is written." />
+  <div class="wrap section-tight"><Prose>
+    <h2>Headings</h2><h1>Heading one</h1><h2>Heading two</h2><h3>Heading three</h3><h4>Heading four</h4><h5>Heading five</h5><h6>Heading six</h6>
+
+    <h2>Text</h2><p>Body copy sits at a comfortable measure, with the display face kept for titles. It carries<strong>bold</strong> and <em>italic</em> emphasis, <code>inline code</code>, and<a href="https://astro.build">links</a> that pick up the accent colour.</p>
+
+    <h2>Quotes</h2><blockquote class="pullquote">Nobody clapped. The silence was better.<cite class="pullquote-attribution">James</cite></blockquote><p>The alternative style centres the quote and gives it its own marks.</p><blockquote class="pullquote pullquote-alt">We forgot you were there, which I think was the point.</blockquote>
+
+    <h2>Lists</h2><ul><li>Unordered lists take a marker in the accent colour</li><li>Items wrap against a hanging indent</li><li>Spacing matches the body rhythm</li></ul><ol><li>Numbered lists share the same measure</li><li>The counter sits outside the text column</li><li>Long items stay aligned</li></ol><hr />
+
+    <h2>Tables</h2><p>A table scrolls inside its own frame when a narrow screen cannot hold it, so it never drags the page sideways.</p><table><thead><tr><th>Collection</th><th>Stories</th><th>Typical length</th></tr></thead><tbody><tr><td>Weddings</td><td>14</td><td>A full day</td></tr><tr><td>Portraits</td><td>4</td><td>Two hours</td></tr><tr><td>Studio notes</td><td>2</td><td>Half a day</td></tr></tbody></table>
+
+    <h2>Photographs</h2><p>A regular figure sits at the width of the reading column.</p>
+    <Figure photo={regular} group="styleguide" caption="Regular width. Click it to open the lightbox." sizes="(min-width: 48rem) 608px, 94vw" />
+    <p>A wide figure breaks out of the column, and a full one runs to the window edge.</p>
+    <Figure photo={wide} size="wide" group="styleguide" caption="Wide." sizes="(min-width: 64rem) 1100px, 94vw" />
+    <Figure photo={full} size="full" group="styleguide" caption="Full width." sizes="100vw" />
+
+    <h2>Galleries</h2><p>A gallery packs its frames into justified rows by their own proportions, so no photograph is cropped to fit a grid. Every row runs the full window at one height. Clicking a frame opens the lightbox scoped to that gallery, with arrows, the keyboard and swipe.</p>
+    <Gallery photos={gallery} group="styleguide-gallery" caption="Six frames, packed into rows. Resize the window and the rows repack." />
+
+    <h2>Callouts</h2>
+    <Callout color="grey" emoji="📷"><p>Grey is the quiet one, for a note that only needs separating from the prose.</p></Callout>
+    <Callout color="blue" emoji="💡"><p>Blue reads as information: context, a definition, a piece of background.</p></Callout>
+    <Callout color="yellow" emoji="⚠️"><p>Yellow is the caution, for a caveat a reader should not miss.</p></Callout>
+    <Callout color="accent" emoji="✸"><p>Accent takes the brand colour set in the stylesheet.</p></Callout>
+
+    <h2>Toggles</h2>
+    <Toggle summary="A toggle hides detail until it is asked for"><p>Useful for a list of what is included, a long caveat, or the answer to a question only some readers have.</p></Toggle>
+    <Toggle summary="Several can sit together as a short FAQ"><p>Each one opens on its own, so a reader can take only the part they came for.</p></Toggle>
+
+    <h2>Bookmarks</h2><p>A bookmark only needs a URL. The picture, the title and the description are read from the linked page's own Open Graph tags at build time, and a page that has none falls back to a plain card.</p>
+    <Bookmark url="https://astro.build/" title="Astro" description="Astro builds fast content sites, powerful web applications, dynamic server APIs, and everything in-between." publisher="Astro" image="https://astro.build/og/astro.jpg" />
+
+    <h2>Audio</h2>
+    <AudioCard src="/media/sample-audio.wav" title="A sample recording" caption="Three seconds, for the shape of the player." />
+
+    <h2>Files</h2>
+    <FileCard href="/files/sample-document.pdf" title="A sample document" caption="What a downloadable price list or contract looks like in the reading column." meta="PDF · 1 KB" />
+
+    <h2>Buttons</h2><div class="card card-button"><a class="btn btn-accent" href="/contact/"><span>A button card</span></a></div>
+
+    <h2>Products</h2>
+    <ProductCard title="The full day" description="From the quiet of the morning to whenever the music stops, with a second photographer from the ceremony onwards." rating={5} buttonLabel="Enquire" buttonLink="/contact/" />
+
+    <h2>Call to action</h2><p>The call to action card takes a note and a button. Handing it a photograph stacks the picture beside the words instead of keeping them on one row.</p>
+    <CtaCard label="Bookings" buttonLabel="Check a date" buttonLink="/contact/"><p>Dates for next summer are open. Most weekends go by the autumn before.</p></CtaCard>
+
+    <h2>Embeds</h2>
+    <Embed src="https://www.youtube-nocookie.com/embed/EQ8ViYIeH04" title="A sample video embed" caption="Video keeps a 16:9 box, so nothing jumps as it loads." />
+
+    <h2>Signup and header cards</h2><p>Both run the full width of the window, for the top of a page or a break between sections.</p>
+    <SignupCard id="styleguide-signup" heading="New work, a few times a year" sub="No newsletter about newsletters. Just the pictures." />
+    <HeaderCard heading="A header card" sub="Full width, dark in both colour modes, with an optional button." buttonLabel="With a button" buttonLink="/contact/" />
+  </Prose></div>
+</BaseLayout>

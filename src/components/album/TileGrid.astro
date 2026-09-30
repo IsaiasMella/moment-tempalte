@@ -1,0 +1,26 @@
+---
+/**
+ * A masonry wall of album tiles. Without JavaScript it is a plain CSS grid;
+ * src/scripts/masonry.ts then balances the tiles into columns of equal height.
+ *
+ *   <TileGrid albums={albums} eager={4} />
+ *
+ * React/Next.js equivalent: a client component wrapping a masonry layout hook.
+ */
+import Tile from './Tile.astro';
+import type { AlbumEntry } from '../../lib/content';
+
+interface Props {
+  albums: AlbumEntry[];
+  heading?: 'h2' | 'h3';
+  /** How many leading tiles load eagerly (the first two also get fetchpriority="high"). */
+  eager?: number;
+}
+
+const { albums, heading = 'h2', eager = 0 } = Astro.props;
+---
+<div class="grid grid-3 grid-masonry" data-masonry data-reveal-group="40">{albums.map((album, index) => <Tile album={album} heading={heading} eager={index < eager} priority={index < Math.min(eager, 2)} />)}</div>
+
+<script>
+  import '../../scripts/masonry';
+</script>

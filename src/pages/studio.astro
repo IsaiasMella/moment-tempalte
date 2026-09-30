@@ -1,0 +1,32 @@
+---
+/**
+ * /studio/ — content from src/content/pages/studio.yml: title, lede, a panoramic
+ * photograph and a Markdown body where {email}, {phone} and {name} are replaced
+ * with the values from the site settings.
+ * React/Next.js equivalent: app/studio/page.tsx rendering <Prose> from CMS Markdown.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/PageHead.astro';
+import Prose from '../components/Prose.astro';
+import { getPage, getSiteSettings } from '../lib/content';
+import { breadcrumbJsonLd } from '../lib/site';
+
+const page = await getPage('studio');
+const settings = await getSiteSettings();
+const { email, phone, name } = settings;
+const jsonLd = breadcrumbJsonLd(settings, Astro.site ?? Astro.url, [{ name: page.title, path: '/studio/' }]);
+
+/**
+ * The theme's own studio photograph ships with pre-rendered widths in public/_astro/,
+ * so it gets a srcset. Any other image (e.g. a CMS upload) is used as it is.
+ */
+const BUNDLED_IMAGE = '/_astro/studio.B5VMrWep_6HeWm.webp';
+const srcset = page.image === BUNDLED_IMAGE
+  ? '/_astro/studio.B5VMrWep_1uCoUc.webp 800w, /_astro/studio.B5VMrWep_2slBS5.webp 1200w, /_astro/studio.B5VMrWep_MRc6E.webp 1600w, /_astro/studio.B5VMrWep_6HeWm.webp 1920w'
+  : undefined;
+---
+<BaseLayout title={page.seo.title} description={page.seo.description || undefined} jsonLd={jsonLd}>
+  <PageHead title={page.title} lede={page.lede} />
+  {page.image && <div class="wrap"><div class="media media-panorama" data-reveal="image"><img src={page.image} srcset={srcset} alt={page.imageAlt} sizes={srcset && '100vw'} loading="eager" fetchpriority="high" decoding="async" width="1920" height="1280" /></div></div>}
+  <div class="wrap wrap-mid section-tight"><Prose class="prose-page" markdown={page.body} vars={{ email, phone, name }} /></div>
+</BaseLayout>

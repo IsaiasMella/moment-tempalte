@@ -1,0 +1,133 @@
+---
+/**
+ * One package on the pricing page: optional badge, name, price (with a small note
+ * such as "from"), summary, the "what is included" list and a button. A featured
+ * package gets a tinted card and the accent button.
+ *
+ * React/Next.js equivalent: `function PricingCard({ pkg }: { pkg: Package })`,
+ * rendered with `packages.map((pkg) => <PricingCard pkg={pkg} />)`.
+ */
+import type { PricingPage } from '../lib/schemas';
+
+/** One entry of `packages` in src/content/pages/pricing.yml. */
+export type PricingPackage = PricingPage['packages'][number];
+
+interface Props {
+  pkg: PricingPackage;
+}
+
+const { pkg } = Astro.props;
+const includes = pkg.includes.filter(Boolean);
+---
+<article class:list={['pricing-card', { 'pricing-card-featured': pkg.featured }]} data-reveal="up">{pkg.badge && <p class="pricing-badge">{pkg.badge}</p>}<div class="pricing-head"><h2 class="pricing-name">{pkg.name}</h2><p class="pricing-price">{pkg.priceNote && <span class="pricing-price-note">{pkg.priceNote}</span>}<span>{pkg.price}</span></p>{pkg.summary && <p class="pricing-summary">{pkg.summary}</p>}</div>{includes.length > 0 && (
+  <div class="pricing-includes">{pkg.includesTitle && <p class="pricing-includes-title">{pkg.includesTitle}</p>}<ul>{includes.map((item) => (
+    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7"></path></svg><span>{item}</span></li>
+  ))}</ul></div>
+)}{pkg.buttonLabel && <a class:list={['btn', pkg.featured ? 'btn-accent' : 'btn-outline']} href={pkg.buttonLink}><span>{pkg.buttonLabel}</span></a>}</article>
+
+<style>
+  .pricing-card {
+    border: var(--rule-thin);
+    background: var(--surface);
+    flex-direction: column;
+    gap: clamp(1.75rem, 3vw, 2.25rem);
+    padding: clamp(1.75rem, 3vw, 2.75rem);
+    display: flex;
+    position: relative;
+  }
+  .pricing-card-featured {
+    border-color: var(--border-strong);
+    background: var(--background-wash);
+  }
+  /* The small label that sits across the card's top edge. */
+  .pricing-badge {
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-label);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    position: absolute;
+    top: 0;
+    left: clamp(1.75rem, 3vw, 2.75rem);
+    transform: translateY(-50%);
+  }
+  .pricing-head {
+    gap: 1rem;
+    display: grid;
+  }
+  .pricing-name {
+    color: var(--muted-foreground);
+    font-family: var(--font-label);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 500;
+  }
+  .pricing-price {
+    font-family: var(--font-title);
+    font-size: clamp(2.5rem, 4vw, 3.25rem);
+    font-weight: var(--title-weight);
+    letter-spacing: var(--title-tracking);
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.6rem;
+    margin: 0;
+    line-height: 1;
+    display: flex;
+  }
+  /* Written first for screen readers ("from €3,200"), shown after the price. */
+  .pricing-price-note {
+    color: var(--muted-foreground);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+    order: 1;
+    font-size: 0.8125rem;
+  }
+  .pricing-summary {
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.55;
+  }
+  .pricing-includes {
+    border-top: var(--rule-thin);
+    padding-top: clamp(1.25rem, 2vw, 1.75rem);
+  }
+  .pricing-includes-title {
+    color: var(--muted-foreground);
+    font-family: var(--font-label);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+  }
+  .pricing-includes ul {
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .pricing-includes li {
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    display: flex;
+  }
+  /*
+   * The check icons deliberately keep the text colour and sit on the first line's
+   * top edge: the original theme's rule for them (accent colour, 0.3rem nudge)
+   * never matched its icon markup, and the rebuild keeps the published look.
+   */
+  /* Buttons line up at the bottom of cards of different heights. */
+  .pricing-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+</style>

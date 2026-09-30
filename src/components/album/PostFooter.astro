@@ -1,0 +1,19 @@
+---
+/**
+ * End of an album: category and tag pills (each links to its listing) and the
+ * Share button, which opens <ShareSheet> (or the native share dialog on phones).
+ *
+ * React/Next.js equivalent: a small presentational component with a client-side onClick.
+ */
+import { categoryUrl, tagUrl } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+
+interface Props {
+  album: AlbumEntry;
+  /** Absolute URL shared by the button. */
+  url: string;
+}
+
+const { album, url } = Astro.props;
+---
+<div class="wrap wrap-mid"><div class="post-footer"><div class="post-footer-tags"><a class="pill" href={categoryUrl(album.category)}>{album.categoryLabel}</a>{album.tags.map((tag) => <a class="pill" href={tagUrl(tag)}>{tag}</a>)}</div><div class="post-footer-actions"><button type="button" class="btn btn-outline btn-sm" data-share-open data-share-title={album.title} data-share-url={url}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3m0 0L8 7m4-4 4 4"></path><path d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"></path></svg><span>Share</span></button></div></div></div>

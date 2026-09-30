@@ -1,0 +1,21 @@
+---
+/**
+ * Home page "The studio" block: photo, title, short text, a button and a few
+ * key figures. Content from src/content/pages/home.yml (`studio`).
+ * A `{stories}` placeholder in a figure value becomes the number of albums.
+ *
+ * React/Next.js equivalent: a presentational section component taking CMS props.
+ */
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { HomePage } from '../../lib/schemas';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  studio: HomePage['studio'];
+  /** Number of published albums, for `{stories}`. */
+  stories: number;
+}
+
+const { studio, stories } = Astro.props;
+---
+<section class="home-studio"><div class="wrap"><div class="home-studio-inner">{studio.image && <div class="media home-studio-media" data-reveal="image"><ResponsiveImage src={studio.image} alt={studio.imageAlt} widths={WIDTHS.studio} sizes="(min-width: 64rem) 46vw, 92vw" autosize /></div>}<div class="home-studio-body"><h2 class="title-xl" data-reveal="up">{studio.title}</h2><p class="home-studio-text" data-reveal="up">{studio.text}</p>{studio.buttonLabel && <a class="btn btn-outline" href={studio.buttonLink} data-reveal="up"><span>{studio.buttonLabel}</span></a>}{studio.figures.length > 0 && <dl class="home-studio-figures" data-reveal="up">{studio.figures.map((figure) => <div class="home-studio-figure"><dt>{figure.label}</dt><dd>{figure.value.replaceAll('{stories}', String(stories))}</dd></div>)}</dl>}</div></div></div></section>

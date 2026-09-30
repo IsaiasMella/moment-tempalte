@@ -1,0 +1,51 @@
+---
+/**
+ * The shared template of every album listing (/work/, /collection/<category>/,
+ * /tag/<tag>/): heading and intro, story count, collection filter pills, the
+ * masonry grid for the current page and the pagination.
+ *
+ * React/Next.js equivalent: a shared layout component used by several
+ * app/…/[[...page]]/page.tsx routes.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Pagination from './Pagination.astro';
+import TileGrid from '../album/TileGrid.astro';
+import type { Page } from 'astro';
+import { categoryUrl } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+import { getSiteSettings } from '../../lib/content';
+import { breadcrumbJsonLd } from '../../lib/site';
+import { CATEGORIES, type Category } from '../../lib/schemas';
+
+interface Props {
+  /** The `page` prop that `paginate()` passes to the route. */
+  page: Page<AlbumEntry>;
+  /** URL of the first page without trailing slash, e.g. "/work". */
+  base: string;
+  /** Visible heading (h1). */
+  heading: string;
+  lede: string;
+  /** Document title (without the site name) and meta description. */
+  title: string;
+  description: string;
+  /** Which filter pill is current: "all" (/work/), a category, or none (tags). */
+  current?: 'all' | Category;
+  /** Breadcrumb after "Work" in the JSON-LD (none for /work/ itself). */
+  crumb?: { name: string; path: string };
+}
+
+const { page, base, heading, lede, title, description, current, crumb } = Astro.props;
+const settings = await getSiteSettings();
+const site = Astro.site ?? Astro.url;
+const noun = page.total === 1 ? 'story' : 'stories';
+const count = page.lastPage > 1 ? `${page.total} ${noun} · page ${page.currentPage} of ${page.lastPage}` : `${page.total} ${noun}`;
+const pageTitle = page.currentPage > 1 ? `${title} — page ${page.currentPage}` : title;
+const jsonLd = crumb ? breadcrumbJsonLd(settings, site, [{ name: 'Work', path: '/work/' }, crumb]) : undefined;
+---
+<BaseLayout title={pageTitle} description={description} jsonLd={jsonLd}>
+  <Fragment slot="head">{page.url.prev && <link rel="prev" href={new URL(page.url.prev, site).href} />}{page.url.next && <link rel="next" href={new URL(page.url.next, site).href} />}</Fragment>
+  <section class="wrap archive-head"><div class="archive-head-inner"><div><h1 class="title-xl archive-title" data-reveal="up">{heading}</h1><p class="lede archive-count" data-reveal="up">{lede}</p></div><div data-reveal="up"><p class="archive-count">{count}</p></div></div><nav class="archive-filters" aria-label="Collections">{current === 'all' ? <span class="pill pill-current" aria-current="page">Everything</span> : <a class="pill" href="/work/">Everything</a>}{(Object.keys(CATEGORIES) as Category[]).map((category) => (
+    <a class:list={['pill', { 'pill-current': current === category }]} href={categoryUrl(category)} aria-current={current === category ? 'page' : undefined}>{CATEGORIES[category]}</a>
+  ))}</nav></section>
+  <section class="wrap archive-feed"><TileGrid albums={page.data} eager={4} /><Pagination page={page} base={base} label={heading} /></section>
+</BaseLayout>

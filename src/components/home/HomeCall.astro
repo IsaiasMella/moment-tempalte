@@ -1,0 +1,14 @@
+---
+/**
+ * Closing call to action of the home page ("Say hello"): title, optional text
+ * and a button. Content from src/content/pages/home.yml (`cta`).
+ */
+import type { HomePage } from '../../lib/schemas';
+
+interface Props {
+  cta: HomePage['cta'];
+}
+
+const { cta } = Astro.props;
+---
+<section class="wrap home-call-section"><div class="home-call"><h2 class="title-xl home-call-title" data-reveal="up">{cta.title}</h2>{cta.text && <p class="lede" data-reveal="up">{cta.text}</p>}{cta.buttonLabel && <a class="btn btn-accent" href={cta.buttonLink} data-reveal="up"><span>{cta.buttonLabel}</span></a>}</div></section>

@@ -1,0 +1,27 @@
+---
+/**
+ * One album in a grid: cover photo with an overlay title (desktop hover) and a
+ * caption below (touch). Used by the home page, the listings and "More weddings".
+ *
+ *   <Tile album={album} heading="h2" eager={index < 4} />
+ *
+ * React/Next.js equivalent: a <Card> rendered inside `albums.map(...)`.
+ */
+import ResponsiveImage from '../ResponsiveImage.astro';
+import { formatMonth } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  album: AlbumEntry;
+  /** Heading level of the title: h2 on listings, h3 under a section heading. */
+  heading?: 'h2' | 'h3';
+  /** First rows of a listing load immediately. */
+  eager?: boolean;
+  /** fetchpriority="high" (with `eager`). */
+  priority?: boolean;
+}
+
+const { album, heading: Heading = 'h2', eager = false, priority = false } = Astro.props;
+---
+<article class="tile" data-reveal="image"><a class="tile-link" href={album.url}><div class="tile-media"><ResponsiveImage src={album.cover.src} alt={album.cover.alt} widths={WIDTHS.tile} sizes="(min-width: 88rem) 30vw, (min-width: 40rem) 46vw, 92vw" eager={eager} priority={priority} autosize /><div class="tile-overlay"><span class="tile-title-mask"><Heading class="tile-title">{album.title}</Heading></span><div class="tile-meta meta-row"><span>{album.categoryLabel}</span><span>{formatMonth(album.date)}</span></div></div></div><div class="tile-caption"><span class="tile-caption-title">{album.title}</span><div class="tile-meta meta-row"><span>{album.categoryLabel}</span><span>{formatMonth(album.date)}</span></div></div></a></article>

@@ -1,0 +1,15 @@
+---
+/**
+ * A full-width dark banner with a heading, a subline and an optional button.
+ * React/Next.js equivalent: <HeaderCard heading="…" sub="…" button={{ … }} />.
+ */
+interface Props {
+  heading: string;
+  sub?: string;
+  buttonLabel?: string;
+  buttonLink?: string;
+}
+
+const { heading, sub, buttonLabel, buttonLink = '#' } = Astro.props;
+---
+<aside class="card card-full card-header"><h2 class="card-header-heading">{heading}</h2>{sub && <p class="card-header-sub">{sub}</p>}{buttonLabel && <p><a class="btn btn-outline" href={buttonLink}><span>{buttonLabel}</span></a></p>}</aside>

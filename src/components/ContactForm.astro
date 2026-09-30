@@ -1,0 +1,31 @@
+---
+/**
+ * The enquiry form on the contact page. Labels come from the contact page content
+ * (`form` in src/content/pages/contact.yml). It only submits once an endpoint is
+ * set in the site settings (`forms.enquiryAction`, e.g. a Formspree URL); until
+ * then the button is disabled and a note explains why.
+ *
+ * React/Next.js equivalent: `<ContactForm labels={…} action={…} />`, a plain
+ * <form action> with no client-side JavaScript.
+ */
+import type { ContactPage } from '../lib/schemas';
+
+interface Props {
+  /** Field and button labels. */
+  labels: ContactPage['form'];
+  /** Where the form posts; empty = form disabled. */
+  action?: string;
+}
+
+const { labels, action } = Astro.props;
+---
+<form class="contact-form field-group" action={action || undefined} method="post"><div class="field-group field-group-2"><div><label class="form-label" for="contact-name">{labels.nameLabel}</label><input class="field" id="contact-name" type="text" name="name" autocomplete="name" required /></div><div><label class="form-label" for="contact-email">{labels.emailLabel}</label><input class="field" id="contact-email" type="email" name="email" autocomplete="email" required /></div></div><div class="field-group field-group-2"><div><label class="form-label" for="contact-date">{labels.dateLabel}</label><input class="field" id="contact-date" type="date" name="date" /></div><div><label class="form-label" for="contact-place">{labels.placeLabel}</label><input class="field" id="contact-place" type="text" name="place" /></div></div><div><label class="form-label" for="contact-message">{labels.messageLabel}</label><textarea class="field" id="contact-message" name="message" rows="7" required></textarea></div><div><button class="btn btn-accent" type="submit" disabled={!action}><span>{labels.buttonLabel}</span></button>{!action && <p class="form-note contact-form-note">Set a form endpoint in src/config/site.ts to start receiving these. Until then the address above is the way in.</p>}</div></form>
+
+<style>
+  .contact-form {
+    gap: 1.5rem;
+  }
+  .contact-form-note {
+    margin-top: 0.75rem;
+  }
+</style>

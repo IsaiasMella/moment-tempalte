@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { albumSummariesSync, getAlbums, tagSlug, type AlbumEntry } from './data';
+import { getAlbums, tagSlug, type AlbumEntry } from './data';
 import { imageInfo, srcset, WIDTHS } from './images';
 import { escapeAttr, escapeText, formatMonth, tile } from './render';
 
@@ -47,19 +47,12 @@ function availablePages(base: string): number {
 /** Pages that listing actually needs; the last available page absorbs any overflow. */
 const pageCount = (total: number, available: number) => Math.min(Math.max(1, Math.ceil(total / PAGE_SIZE)), available);
 
-/** Routes rendered by dedicated pages instead of the reference catch-all. */
+/**
+ * Routes rendered by dedicated Astro pages instead of the reference catch-all:
+ * home (src/pages/index.astro), /work/…, /collection/…, /tag/… and /story/…
+ */
 export function isGeneratedRoute(route: string): boolean {
-  // Every story page is generated from src/content/albums.
-  if (/^story\/[^/]+\/$/.test(route)) return true;
-  // Drop pagination pages left empty after albums are deleted.
-  const listing = listingFor(route);
-  if (listing?.kind === 'archive' && listing.paginated && listing.page > 1) {
-    const summaries = albumSummariesSync();
-    const category = listing.base.startsWith('/collection/') ? listing.base.split('/')[2] : undefined;
-    const total = summaries.filter((album) => !category || album.category === category).length;
-    return listing.page > pageCount(total, availablePages(listing.base));
-  }
-  return false;
+  return route === '' || /^(work|collection|tag|story)\//.test(route);
 }
 
 const GRID = /(<div class="grid grid-3 grid-masonry"[^>]*>)(?:<article class="tile"[\s\S]*?<\/article>)*/;

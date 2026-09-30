@@ -1,0 +1,23 @@
+---
+/**
+ * Full-width link to the next (older) album; the newest follows the oldest.
+ * Renders nothing when there is only one album.
+ *
+ * React/Next.js equivalent: a "next post" <Link> computed from the sorted list.
+ */
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { AlbumEntry } from '../../lib/content';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  album: AlbumEntry;
+  albums: AlbumEntry[];
+}
+
+const { album, albums } = Astro.props;
+const index = albums.findIndex((other) => other.slug === album.slug);
+const next = albums.length > 1 ? albums[(index + 1) % albums.length] : undefined;
+---
+{next && (
+  <a class="post-next" href={next.url}><div class="post-next-media"><ResponsiveImage src={next.cover.src} alt="" widths={WIDTHS.next} cover={70} /></div><div class="post-next-scrim"></div><div class="post-next-body"><p class="label">Next</p><p class="title-xl post-next-title">{next.title}</p></div></a>
+)}

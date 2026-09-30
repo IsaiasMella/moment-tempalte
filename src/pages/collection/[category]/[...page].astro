@@ -1,0 +1,36 @@
+---
+/**
+ * /collection/weddings/, /collection/weddings/2/, /collection/portraits/, … —
+ * the albums of one category, 12 per page. One set of pages per category in
+ * CATEGORIES (src/lib/schemas.ts).
+ *
+ * React/Next.js equivalent: app/collection/[category]/[[...page]]/page.tsx with
+ * `generateStaticParams()` returning every { category, page } pair.
+ */
+import type { GetStaticPaths, Page } from 'astro';
+import ArchivePage from '../../../components/archive/ArchivePage.astro';
+import { ARCHIVE_COPY, categoryUrl, PAGE_SIZE } from '../../../lib/archive';
+import { getAlbums, type AlbumEntry } from '../../../lib/content';
+import { CATEGORIES, type Category } from '../../../lib/schemas';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const albums = await getAlbums();
+  return (Object.keys(CATEGORIES) as Category[]).flatMap((category) =>
+    paginate(albums.filter((album) => album.category === category), {
+      params: { category },
+      props: { category },
+      pageSize: PAGE_SIZE,
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<AlbumEntry>;
+  category: Category;
+}
+
+const { page, category } = Astro.props;
+const label = CATEGORIES[category];
+const { lede } = ARCHIVE_COPY.collections[category];
+---
+<ArchivePage page={page} base={`/collection/${category}`} heading={label} lede={lede} title={label} description={lede} current={category} crumb={{ name: label, path: categoryUrl(category) }} />

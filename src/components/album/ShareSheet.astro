@@ -1,0 +1,167 @@
+---
+/**
+ * "Share this story" dialog: brand tiles for each destination (src/lib/share.ts),
+ * a "More" button revealing the rest, and the page link with a Copy button.
+ * Opened by any `[data-share-open]` button (see PostFooter.astro); on devices with
+ * the Web Share API the native sheet is used instead (src/scripts/share.ts).
+ *
+ * React/Next.js equivalent: a <Dialog> component with its CSS module.
+ */
+import Icon from '../Icon.astro';
+import { shareIcons, shareTargets } from '../../lib/share';
+
+interface Props {
+  title: string;
+  /** Absolute URL of the page. */
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const targets = shareTargets(title, url);
+const iconClass = 'inline-grid place-items-center [&>svg]:h-full [&>svg]:w-full [&>svg]:fill-current';
+---
+<dialog id="share-sheet" class="sheet" aria-labelledby="share-sheet-title" data-share-sheet>
+  <div class="sheet-panel">
+    <div class="sheet-head"><h2 id="share-sheet-title" class="title-md">Share this story</h2><button type="button" class="icon-btn" aria-label="Close sharing options" data-share-close><Icon name="close" size={18} /></button></div>
+    <ul class="sheet-targets">
+      {targets.filter((target) => !target.extra).map((target) => (
+        <li><a class="sheet-target" style={`--brand-mark:${target.color}`} href={target.href} target="_blank" rel="noreferrer" data-share-target><span class="sheet-icon"><span class:list={[iconClass, 'h-5 w-5']} aria-hidden="true" set:html={shareIcons[target.icon]} /></span><span class="sheet-label">{target.label}</span></a></li>
+      ))}
+      <li data-share-more-item><button type="button" class="sheet-target sheet-target-quiet" data-share-more><span class="sheet-icon"><span class:list={[iconClass, 'h-5 w-5']} aria-hidden="true" set:html={shareIcons['three-dots']} /></span><span class="sheet-label">More</span></button></li>
+      {targets.filter((target) => target.extra).map((target) => (
+        <li hidden data-share-extra><a class="sheet-target" style={`--brand-mark:${target.color}`} href={target.href} target="_blank" rel="noreferrer" data-share-target><span class="sheet-icon"><span class:list={[iconClass, 'h-5 w-5']} aria-hidden="true" set:html={shareIcons[target.icon]} /></span><span class="sheet-label">{target.label}</span></a></li>
+      ))}
+    </ul>
+    <div class="sheet-link"><p class="sheet-link-label">Page link</p><div class="sheet-link-row"><input class="sheet-field" type="text" readonly value={url} aria-label="Page link" data-share-url /><button type="button" class="sheet-copy" data-share-copy data-copy-url={url} data-label-copy="Copy" data-label-copied="Copied" data-label-fallback="Press Ctrl+C"><span class:list={[iconClass, 'h-3.5 w-3.5']} aria-hidden="true" set:html={shareIcons.clipboard} /><span aria-live="polite" data-share-copy-label>Copy</span></button></div></div>
+  </div>
+</dialog>
+
+<script>
+  import '../../scripts/share';
+</script>
+
+<style>
+  .sheet {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 1.25rem;
+    color: var(--foreground);
+    background: 0 0;
+    border: 0;
+  }
+  .sheet:not([open]) { display: none; }
+  .sheet::backdrop { background: oklch(10% 0 0 / 0.58); }
+
+  .sheet-panel {
+    width: 100%;
+    max-width: 26rem;
+    max-height: calc(100dvh - 2.5rem);
+    padding: 1.5rem;
+    overflow-y: auto;
+    background: var(--surface);
+    border: var(--rule-thin);
+  }
+  .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .sheet-targets {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (width <= 26rem) {
+    .sheet-targets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .sheet-targets li[hidden] { display: none; }
+
+  .sheet-target {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0;
+    color: var(--muted-foreground);
+    font-family: var(--font-label);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-align: center;
+    background: 0 0;
+    border: 0;
+  }
+  .sheet-target:hover { color: var(--foreground); }
+  .sheet-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: #fff;
+    background: var(--brand-mark, var(--muted));
+    transition: transform 0.2s var(--ease);
+  }
+  .sheet-target-quiet .sheet-icon { background: var(--muted); color: var(--foreground); }
+  .sheet-target:hover .sheet-icon { transform: translateY(-2px); }
+  .sheet-label { line-height: 1.2; }
+
+  .sheet-link {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: var(--rule-thin);
+  }
+  .sheet-link-label { color: var(--muted-foreground); font-size: 0.75rem; }
+  .sheet-link-row {
+    display: flex;
+    align-items: stretch;
+    margin-top: 0.6rem;
+    overflow: hidden;
+    background: var(--background-wash);
+    border: var(--rule-thin);
+  }
+  .sheet-field {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6rem 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    background: 0 0;
+    border: 0;
+  }
+  .sheet-field:focus { outline: none; }
+  .sheet-copy {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.45rem;
+    padding-inline: 0.9rem;
+    color: var(--foreground);
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    background: var(--surface);
+    border: 0;
+    border-left: var(--rule-thin);
+  }
+  .sheet-copy:hover { color: var(--accent-text); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sheet-icon,
+    .sheet-target:hover .sheet-icon { transition: none; transform: none; }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+/**
+ * The opening of an album page.
+ * - layout "story": full-bleed cover under a transparent header, title over the
+ *   photo, then the lede.
+ * - layout "note": a text header (kicker, title, lede) and the cover inline.
+ *
+ * React/Next.js equivalent: a <StoryHeader album={album} /> with two variants.
+ */
+import ResponsiveImage from '../ResponsiveImage.astro';
+import { formatLong } from '../../lib/archive';
+import type { AlbumEntry } from '../../lib/content';
+import { getImageData, WIDTHS } from '../../lib/images';
+
+interface Props {
+  album: AlbumEntry;
+}
+
+const { album } = Astro.props;
+const kicker = [album.categoryLabel, album.location, formatLong(album.date)].filter(Boolean);
+const cover = await getImageData(album.cover.src);
+const portrait = !!cover.width && !!cover.height && cover.height > cover.width;
+---
+{album.layout === 'note' ? (
+  <header class="wrap wrap-mid post-head"><p class="label label-soft meta-row post-kicker">{kicker.map((part) => <span>{part}</span>)}</p><h1 class="display post-head-title">{album.title}</h1><p class="lede page-head-lede">{album.lede}</p></header><div class="wrap"><figure class="post-figure-inline" data-reveal="image"><div class:list={['media', portrait ? 'media-portrait' : 'media-landscape']}><ResponsiveImage src={album.cover.src} alt={album.cover.alt} widths={WIDTHS.hero} sizes="100vw" eager /></div></figure></div>
+) : (
+  <header class="post-hero"><div class="post-hero-media"><ResponsiveImage src={album.cover.src} alt={album.cover.alt} widths={WIDTHS.hero} cover={92} eager /></div><div class="post-hero-scrim"></div><div class="wrap post-hero-body"><p class="label meta-row post-kicker">{kicker.map((part) => <span>{part}</span>)}</p><h1 class="display post-hero-title">{album.title}</h1></div></header><div class="wrap wrap-reading"><p class="post-lede" data-reveal="up">{album.lede}</p></div>
+)}

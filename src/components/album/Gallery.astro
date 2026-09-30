@@ -1,0 +1,27 @@
+---
+/**
+ * A "gallery" block: photographs packed into justified rows so none is cropped.
+ * The server renders a simple grid; src/scripts/gallery.ts computes the rows.
+ *
+ * React/Next.js equivalent: a client component that measures its container
+ * (useLayoutEffect + ResizeObserver) and lays out its children.
+ */
+import LightboxFrame from './LightboxFrame.astro';
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { AlbumImage } from '../../lib/schemas';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  images: AlbumImage[];
+  caption?: string;
+}
+
+const { images, caption } = Astro.props;
+---
+<figure class="gallery" aria-label="Gallery"><div class="gallery-rows" data-gallery>{images.map((image, index) => (
+  <LightboxFrame image={image} class="gallery-frame" label={`Enlarge photograph ${index + 1} of ${images.length}`}><ResponsiveImage src={image.src} alt={image.alt} widths={WIDTHS.gallery} sizes="(min-width: 64rem) 34vw, (min-width: 40rem) 48vw, 94vw" autosize /></LightboxFrame>
+))}</div>{caption && <figcaption class="gallery-caption">{caption}</figcaption>}</figure>
+
+<script>
+  import '../../scripts/gallery';
+</script>

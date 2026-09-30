@@ -1,0 +1,153 @@
+---
+/**
+ * "Kind words": a swipeable row of client quotes with photo, names and context.
+ * Content from src/content/pages/home.yml (`testimonials`); renders nothing
+ * without items. src/scripts/testimonials.ts adds the arrows and dots.
+ *
+ * React/Next.js equivalent: a client carousel component with a CSS module
+ * (the <style> below is scoped to this component, like a CSS module).
+ */
+import Icon from '../Icon.astro';
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { HomePage } from '../../lib/schemas';
+import { WIDTHS } from '../../lib/images';
+
+interface Props {
+  testimonials: HomePage['testimonials'];
+}
+
+const { testimonials } = Astro.props;
+const items = testimonials.items.filter((item) => item.quote || item.names);
+const paragraphs = (text: string) => text.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean);
+---
+{items.length > 0 && (
+  <section class="wrap section-tight testimonials" aria-labelledby="testimonials-title" data-testimonials><div class="testimonials-head"><h2 class="title-lg" id="testimonials-title" data-reveal="up">{testimonials.title}</h2><div class="testimonials-controls" data-reveal="up"><button type="button" class="icon-btn" data-testimonials-prev aria-label="Previous testimonial"><Icon name="arrow-left" size={18} /></button><button type="button" class="icon-btn" data-testimonials-next aria-label="Next testimonial"><Icon name="arrow-right" size={18} /></button></div></div><div class="testimonials-track" data-testimonials-track tabindex="0" data-reveal="fade">{items.map((item, index) => (
+    <figure class="testimonial" data-testimonial aria-label={`${index + 1} / ${items.length}`}>{item.image && <div class="testimonial-media"><ResponsiveImage src={item.image} alt={item.imageAlt} widths={WIDTHS.testimonial} sizes="(min-width: 64rem) 24rem, 14rem" autosize /></div>}<blockquote class="testimonial-quote">{paragraphs(item.quote).map((paragraph) => <p>{paragraph}</p>)}</blockquote><figcaption class="testimonial-who"><span class="testimonial-names">{item.names}</span>{(item.category || item.context) && <span class="label label-soft meta-row">{[item.category, item.context].filter(Boolean).map((value) => <span>{value}</span>)}</span>}</figcaption></figure>
+  ))}</div><ol class="testimonials-dots">{items.map((item, index) => (
+    <li><button type="button" class="testimonials-dot" data-testimonials-dot aria-current={index === 0 ? 'true' : 'false'} aria-label={`Show testimonial ${index + 1}: ${item.names}`}></button></li>
+  ))}</ol></section>
+)}
+
+<script>
+  import '../../scripts/testimonials';
+</script>
+
+<style>
+  .testimonials-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1.75rem, 3.5vw, 3rem);
+  }
+  /* Arrows and dots only work with JavaScript (the root gets .js from ThemeScript). */
+  .testimonials-controls { display: none; gap: 0.25rem; margin-right: -0.5rem; }
+  :global(.js) .testimonials-controls { display: flex; }
+
+  .testimonials-track {
+    position: relative;
+    display: flex;
+    gap: clamp(2rem, 4vw, 4rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    outline-offset: 8px;
+  }
+  .testimonials-track::-webkit-scrollbar { display: none; }
+
+  .testimonial {
+    display: grid;
+    flex: 0 0 100%;
+    grid-template-areas: "media" "quote" "who";
+    gap: 0;
+    margin: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .testimonial-media {
+    grid-area: media;
+    width: min(100%, 14rem);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: var(--muted);
+  }
+  .testimonial-media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .testimonial-quote {
+    grid-area: quote;
+    max-width: 40rem;
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: clamp(1.375rem, 2.4vw, 2.125rem);
+    font-weight: var(--title-weight);
+    line-height: 1.3;
+    letter-spacing: var(--title-tracking);
+    text-wrap: pretty;
+  }
+  .testimonial-quote::before {
+    display: block;
+    width: 0.8em;
+    height: 0.55em;
+    margin: 0 0 1.25rem;
+    color: var(--accent-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0;
+    content: "“";
+  }
+  .testimonial-quote p { margin: 0; }
+
+  .testimonial-who {
+    display: grid;
+    grid-area: who;
+    gap: 0.5rem;
+    max-width: 40rem;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .testimonial-names {
+    font-family: var(--font-label);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .testimonials-dots {
+    display: none;
+    gap: 0.5rem;
+    margin: clamp(1.75rem, 3.5vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  :global(.js) .testimonials-dots { display: flex; }
+  .testimonials-dot {
+    position: relative;
+    width: 2.25rem;
+    height: 2px;
+    padding: 0;
+    background: var(--border);
+    border: 0;
+    transition: background-color 0.3s var(--ease);
+  }
+  /* Larger touch target than the 2px line. */
+  .testimonials-dot::before { position: absolute; inset: -0.75rem 0; content: ""; }
+  .testimonials-dot[aria-current="true"] { background: var(--foreground); }
+
+  @media (width >= 64rem) {
+    .testimonial {
+      grid-template:
+        "media ." 1fr
+        "media quote"
+        "media who"
+        "media ." 1fr / minmax(0, 2fr) minmax(0, 3fr);
+      column-gap: clamp(2rem, 4vw, 4.5rem);
+    }
+    .testimonial-media { width: 100%; max-width: 24rem; margin-bottom: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .testimonials-track { scroll-behavior: auto; }
+    .testimonials-dot { transition: none; }
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+/**
+ * /pricing/ — content from src/content/pages/pricing.yml: title, lede, a card per
+ * package (see PricingCard.astro) and a closing note.
+ * React/Next.js equivalent: app/pricing/page.tsx mapping `packages` to <PricingCard />.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/PageHead.astro';
+import PricingCard from '../components/PricingCard.astro';
+import { getPage, getSiteSettings } from '../lib/content';
+import { breadcrumbJsonLd } from '../lib/site';
+
+const page = await getPage('pricing');
+const settings = await getSiteSettings();
+const jsonLd = breadcrumbJsonLd(settings, Astro.site ?? Astro.url, [{ name: page.title, path: '/pricing/' }]);
+---
+<BaseLayout title={page.seo.title} description={page.seo.description || undefined} jsonLd={jsonLd}>
+  <PageHead title={page.title} lede={page.lede} />
+  <section class="wrap pricing-section"><div class="pricing-grid" data-reveal-group="90">{page.packages.map((pkg) => <PricingCard pkg={pkg} />)}</div>{page.note && <p class="pricing-note" data-reveal="up">{page.note}</p>}</section>
+</BaseLayout>
+
+<style>
+  .pricing-section {
+    padding-bottom: var(--space-section);
+  }
+  .pricing-grid {
+    gap: clamp(2rem, 6vw, 2.75rem);
+    display: grid;
+  }
+  @media (width >= 64rem) {
+    .pricing-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+      gap: clamp(1rem, 2vw, 1.5rem);
+    }
+  }
+  .pricing-note {
+    max-width: 44rem;
+    color: var(--muted-foreground);
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+</style>

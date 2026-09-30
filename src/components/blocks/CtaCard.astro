@@ -1,0 +1,14 @@
+---
+/**
+ * A call-to-action card: a small label, the note (slot) and a button, on one row.
+ * React/Next.js equivalent: <CtaCard label="…" button={{ … }}>{children}</CtaCard>.
+ */
+interface Props {
+  label?: string;
+  buttonLabel: string;
+  buttonLink: string;
+}
+
+const { label, buttonLabel, buttonLink } = Astro.props;
+---
+<aside class="card card-cta card-cta-row"><div class="card-cta-body">{label && <p class="card-cta-label">{label}</p>}<div class="card-cta-text"><slot /></div></div><p class="card-cta-foot"><a class="btn btn-accent" href={buttonLink}><span>{buttonLabel}</span></a></p></aside>
