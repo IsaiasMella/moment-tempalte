@@ -3,7 +3,7 @@
 El sitio incluye un panel en **`/admin/`** para editar álbumes, páginas y datos generales sin tocar código. Funciona con [Sveltia CMS](https://sveltiacms.app): cada cambio se guarda como archivo dentro del proyecto (`src/content/…` para textos, `public/uploads/` para fotos) y el sitio se reconstruye con esos archivos.
 
 - Configuración del panel: `public/admin/config.yml`
-- Página del panel: `public/admin/index.html`
+- Página del panel: `src/pages/admin/index.astro`
 - Fotos subidas desde el panel: `public/uploads/`
 
 El idioma del panel sigue al del navegador: con el navegador en español se muestra en español. Se puede cambiar desde el menú de la cuenta → **Configuración**.

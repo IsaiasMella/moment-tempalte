@@ -1,3 +1,6 @@
+---
+// Sveltia CMS panel. Lives in src/pages so the catch-all route does not shadow /admin/ in dev.
+---
 <!doctype html>
 <html lang="es">
   <head>
@@ -10,6 +13,6 @@
   </head>
   <body>
     <!-- Sveltia CMS: https://sveltiacms.app · Guía: docs/CMS.md -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script is:inline src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
   </body>
 </html>
