@@ -1,0 +1,104 @@
+/* Páginas de listado: encabezado, filtros y paginación. */
+
+.archive-head {
+  padding-top: clamp(4rem, 12vh, 9rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.archive-head-inner {
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  display: grid;
+}
+
+@media (width >= 64rem) {
+  .archive-head-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  }
+}
+
+.archive-title {
+  max-width: 14ch;
+}
+
+.archive-count {
+  color: var(--muted-foreground);
+  margin-top: 1.25rem;
+}
+
+.archive-filters {
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+}
+
+.archive-feed {
+  padding-bottom: var(--space-section);
+}
+
+.archive-empty {
+  color: var(--muted-foreground);
+  text-align: center;
+  padding-block: clamp(4rem, 10vw, 8rem);
+}
+
+.pagination {
+  border-top: var(--rule-thin);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding-top: 2rem;
+  display: flex;
+}
+
+.pagination-side {
+  min-width: 6rem;
+}
+
+.pagination-side:last-child {
+  text-align: right;
+}
+
+.pagination-pages {
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  display: flex;
+}
+
+.pagination-page, .pagination-current, .pagination-gap {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  font-family: var(--font-label);
+  letter-spacing: .12em;
+  place-items: center;
+  padding-inline: .75rem;
+  font-size: .6875rem;
+  display: grid;
+}
+
+.pagination-page {
+  border: var(--rule-thin);
+  border-radius: var(--radius-control);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.pagination-page:hover {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.pagination-current {
+  border-radius: var(--radius-control);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.pagination-gap {
+  color: var(--muted-foreground);
+}

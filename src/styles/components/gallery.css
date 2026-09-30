@@ -1,0 +1,81 @@
+/* Galerías de fotos (filas justificadas). */
+
+.gallery {
+  --gallery-gap: clamp(.5rem, 1.2vw, 1.25rem);
+  width: 100vw;
+  padding-inline: var(--gutter);
+  margin-block: clamp(3rem, 7vw, 6rem);
+  margin-inline: calc(50% - 50vw);
+}
+
+.gallery-rows {
+  gap: var(--gallery-gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  display: grid;
+}
+
+.gallery-rows.is-justified {
+  gap: var(--gallery-gap);
+  flex-direction: column;
+  display: flex;
+}
+
+.gallery-row {
+  gap: var(--gallery-gap);
+  margin: 0;
+  display: flex;
+}
+
+.is-justified .gallery-row > .gallery-frame, .gallery-stack {
+  flex: calc(var(--slot-aspect, 1) * 1000) 1 0%;
+  min-width: 0;
+  aspect-ratio: var(--slot-aspect, 1);
+  margin: 0;
+}
+
+.gallery-stack {
+  gap: var(--gallery-gap);
+  flex-direction: column;
+  display: flex;
+}
+
+.gallery-stack > .gallery-frame {
+  flex: calc(var(--stack-share, 1) * 1000) 1 0%;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+
+.gallery-frame {
+  background: var(--muted);
+  cursor: zoom-in;
+  border: 0;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.gallery-frame img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: transform .6s var(--ease-image), opacity var(--duration-fast) var(--ease);
+}
+
+.gallery-frame:hover img {
+  opacity: .92;
+  transform: scale(1.02);
+}
+
+.gallery-caption {
+  color: var(--muted-foreground);
+  padding-top: .75rem;
+  padding-inline: 0;
+  font-size: .6875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-frame img, .gallery-frame:hover img {
+    transition: none;
+    transform: none;
+  }
+}

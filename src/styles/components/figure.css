@@ -1,0 +1,52 @@
+/* Fotos sueltas dentro del texto y sus pies de foto. */
+
+.card {
+  margin-block: 2.5rem;
+}
+
+.card-wide {
+  width: calc(100% + var(--breakout) * 2);
+  margin-inline: calc(var(--breakout) * -1);
+}
+
+.card-full {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+.card-full > figcaption, .card-full .figure-caption {
+  padding-inline: var(--gutter);
+}
+
+.figure-caption, .prose figcaption {
+  color: var(--muted-foreground);
+  text-align: left;
+  padding-top: .75rem;
+  font-size: .6875rem;
+  line-height: 1.25rem;
+}
+
+.figure-caption a {
+  color: inherit;
+  text-decoration: underline;
+  -webkit-text-decoration-color: var(--accent);
+  -webkit-text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.figure-frame {
+  background: var(--muted);
+  cursor: zoom-in;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+.figure-frame img {
+  width: 100%;
+  transition: transform .6s var(--ease-image);
+}
+
+.figure-frame:hover img {
+  transform: scale(1.015);
+}

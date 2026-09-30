@@ -1,0 +1,47 @@
+/*
+ * Hoja de estilos principal.
+ * Orden: Tailwind (reset + utilidades) → tokens de diseño → fuentes → base → componentes.
+ * El orden importa: los componentes van al final para que ganen en la cascada.
+ */
+@import "tailwindcss";
+
+/* Tailwind usa estas variables para sus utilidades (font-sans, font-display…). */
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+}
+
+/* Modo oscuro por atributo (data-theme="dark"), no por la preferencia del sistema. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@import "./tokens.css";
+@import "./fonts.css";
+@import "./base.css";
+@import "./components/a11y.css";
+@import "./components/typography.css";
+@import "./components/layout.css";
+@import "./components/media.css";
+@import "./components/motion.css";
+@import "./components/buttons.css";
+@import "./components/pill.css";
+@import "./components/icon-button.css";
+@import "./components/forms.css";
+@import "./components/header.css";
+@import "./components/menu.css";
+@import "./components/footer.css";
+@import "./components/grid.css";
+@import "./components/tile.css";
+@import "./components/home.css";
+@import "./components/marquee.css";
+@import "./components/archive.css";
+@import "./components/post.css";
+@import "./components/page-head.css";
+@import "./components/prose.css";
+@import "./components/figure.css";
+@import "./components/pullquote.css";
+@import "./components/cards.css";
+@import "./components/gallery.css";
+@import "./components/lightbox.css";
+@import "./components/error-page.css";
+@import "./components/print.css";

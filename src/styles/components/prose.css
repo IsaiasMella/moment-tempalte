@@ -1,0 +1,179 @@
+/* Texto largo: párrafos, títulos, listas y tablas dentro de artículos. */
+
+.prose {
+  --breakout: clamp(0px, calc((100vw - var(--gutter) * 2 - var(--layout-reading)) / 2), 15rem);
+  max-width: var(--layout-reading);
+  margin: 0 auto;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.prose > * {
+  margin-bottom: 1.5rem;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose-page {
+  --breakout: 0px;
+  margin: 0;
+}
+
+.prose-page .card-wide, .prose-page .card-full {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.prose-page > :first-child {
+  margin-top: 0;
+}
+
+.prose h1 {
+  max-width: 20ch;
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.875rem, 3.4vw, 2.625rem);
+}
+
+.prose h2 {
+  max-width: 22ch;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+
+.prose :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.prose h3 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.prose h4, .prose h5, .prose h6 {
+  font-family: var(--font-label);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-top: 2rem;
+  margin-bottom: .75rem;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.prose a:not([class]) {
+  color: var(--accent-text);
+  text-underline-offset: 3px;
+  transition: opacity var(--duration-fast) var(--ease);
+  text-decoration: underline 1px;
+}
+
+.prose a:not([class]):hover {
+  opacity: .65;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-bottom: .5rem;
+}
+
+.prose li::marker {
+  color: var(--accent-text);
+}
+
+.prose hr {
+  margin-block: clamp(3rem, 6vw, 4.5rem);
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose code {
+  border-radius: var(--radius);
+  background: var(--muted);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  padding: .125em .375em;
+  font-size: .875em;
+}
+
+.prose pre {
+  border: var(--rule-thin);
+  border-radius: var(--radius);
+  background: var(--muted);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  tab-size: 4;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  font-size: .875rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+}
+
+.table-scroll {
+  overscroll-behavior-x: contain;
+  max-width: 100%;
+  margin-block: 2rem;
+  overflow-x: auto;
+}
+
+.table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.prose table {
+  border-collapse: collapse;
+  text-align: left;
+  width: 100%;
+  font-size: .9375rem;
+  line-height: 1.5;
+}
+
+.prose th {
+  border-bottom: var(--rule-strong);
+  color: var(--foreground);
+  font-family: var(--font-label);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: .75rem 1rem .75rem 0;
+  font-size: .6875rem;
+  font-weight: 600;
+}
+
+.prose td {
+  border-bottom: var(--rule-thin);
+  color: var(--muted-foreground);
+  padding: .75rem 1rem .75rem 0;
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prose :where(th, td):last-child {
+  padding-right: 0;
+}

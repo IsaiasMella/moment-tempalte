@@ -1,0 +1,141 @@
+/* Menú desplegable (celular y "Más"). */
+
+.menu-toggle {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: inherit;
+  flex: none;
+  place-items: center;
+  display: grid;
+}
+
+.menu-toggle svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+@media (width >= 64rem) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+.menu-icon-close, .has-open-menu .menu-icon-open {
+  display: none;
+}
+
+.has-open-menu .menu-icon-close {
+  display: block;
+}
+
+.menu-backdrop {
+  z-index: 60;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-slow) var(--ease);
+  background: oklch(10% 0 0 / .55);
+  position: fixed;
+  inset: 0;
+}
+
+.has-open-menu .menu-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-panel {
+  z-index: 70;
+  width: min(26rem, 88vw);
+  padding: 1.25rem var(--gutter) 2.5rem;
+  background: var(--background);
+  color: var(--foreground);
+  transition: transform .6s var(--ease);
+  flex-direction: column;
+  display: flex;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  transform: translate(100%);
+}
+
+.has-open-menu .menu-panel {
+  transform: none;
+}
+
+.menu-panel-head {
+  height: var(--header-height);
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.menu-body {
+  flex-direction: column;
+  flex: 1;
+  display: flex;
+}
+
+.menu-group {
+  color: var(--muted-foreground);
+  font-family: var(--font-label);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  margin: 0 0 .75rem;
+  font-size: .625rem;
+}
+
+.menu-list {
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-list-primary a {
+  font-family: var(--font-title);
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  transition: color var(--duration-fast) var(--ease), transform var(--duration-slow) var(--ease);
+  padding: .4rem 0;
+  line-height: 1.2;
+  display: block;
+}
+
+.menu-list-primary a:hover {
+  color: var(--accent-text);
+  transform: translate(.5rem);
+}
+
+.menu-list-secondary a {
+  color: var(--muted-foreground);
+  padding: .3rem 0;
+  font-size: .8125rem;
+  display: block;
+}
+
+.menu-list-secondary a:hover {
+  color: var(--foreground);
+}
+
+.menu-foot {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .25rem;
+  margin-top: auto;
+  margin-left: -.5rem;
+  padding-top: 2.5rem;
+  display: flex;
+}
+
+.menu-foot .icon-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.menu-foot .icon-btn svg {
+  width: 1rem;
+  height: 1rem;
+}

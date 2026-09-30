@@ -1,0 +1,28 @@
+/* Estilos de impresión. */
+
+@media print {
+  .site-header-slot, .site-header, .site-footer, .menu-panel, .menu-backdrop, .post-next, .marquee, .lightbox, .sheet {
+    display: none !important;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+
+  .post-hero {
+    color: #000;
+    height: auto;
+    min-height: 0;
+  }
+
+  .post-hero-media, .post-hero-scrim {
+    position: static;
+  }
+
+  .prose, .gallery, .card-wide, .card-full {
+    width: auto;
+    max-width: none;
+    margin-inline: 0;
+  }
+}

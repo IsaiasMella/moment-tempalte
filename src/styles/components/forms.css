@@ -1,0 +1,114 @@
+/* Campos de formulario y formulario de suscripción. */
+
+label, .form-label {
+  color: var(--muted-foreground);
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+  font-size: .625rem;
+  font-weight: 500;
+  display: block;
+}
+
+.field {
+  border: 0;
+  border-bottom: 1px solid;
+  width: 100%;
+  padding: .75rem .875rem;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .field {
+    border-bottom: 1px solid color-mix(in oklab, currentcolor 28%, transparent);
+  }
+}
+
+.field {
+  background: currentColor;
+  border-radius: 0;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .field {
+    background: color-mix(in oklab, currentcolor 4%, transparent);
+  }
+}
+
+.field {
+  color: inherit;
+  transition: border-color var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+  outline: none;
+  font-size: .9375rem;
+}
+
+.field:hover {
+  background: currentColor;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .field:hover {
+    background: color-mix(in oklab, currentcolor 6%, transparent);
+  }
+}
+
+.field:focus {
+  background: currentColor;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .field:focus {
+    background: color-mix(in oklab, currentcolor 7%, transparent);
+  }
+}
+
+.field::placeholder {
+  color: inherit;
+  opacity: .45;
+}
+
+.field:focus {
+  border-bottom-color: currentColor;
+}
+
+textarea.field {
+  resize: vertical;
+  min-height: 11rem;
+}
+
+.field-group {
+  gap: 1.25rem;
+  display: grid;
+}
+
+@media (width >= 48rem) {
+  .field-group-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.subscribe-form {
+  gap: .75rem;
+  margin-top: 1.25rem;
+  display: grid;
+}
+
+@media (width >= 40rem) {
+  .subscribe-form {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+.subscribe-form .field, .subscribe-form .btn {
+  min-height: 3rem;
+}
+
+.subscribe-form .form-note {
+  grid-column: 1 / -1;
+}
+
+.form-note {
+  color: var(--muted-foreground);
+  font-size: .75rem;
+}

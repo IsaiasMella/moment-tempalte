@@ -1,0 +1,44 @@
+/* Proporciones de imágenes (retrato, cuadrado, panorámica…). */
+
+.media {
+  background: var(--muted);
+  position: relative;
+  overflow: hidden;
+}
+
+.media img, .media picture {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.media-portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.media-tall {
+  aspect-ratio: 2 / 3;
+}
+
+.media-square {
+  aspect-ratio: 1;
+}
+
+.media-landscape {
+  aspect-ratio: 3 / 2;
+}
+
+.media-wide {
+  aspect-ratio: 16 / 9;
+}
+
+.media-panorama {
+  aspect-ratio: 3 / 2;
+}
+
+@media (width >= 48rem) {
+  .media-panorama {
+    aspect-ratio: 21 / 9;
+  }
+}

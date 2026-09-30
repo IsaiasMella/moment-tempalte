@@ -1,0 +1,24 @@
+/* Página 404. */
+
+.error-page {
+  min-height: 70vh;
+  padding-block: var(--space-section);
+  text-align: center;
+  place-items: center;
+  display: grid;
+}
+
+.error-code {
+  font-family: var(--font-title);
+  opacity: .12;
+  font-size: clamp(6rem, 22vw, 16rem);
+  line-height: .8;
+}
+
+.error-message {
+  margin-top: clamp(-3rem, -4vw, -2rem);
+}
+
+.error-actions {
+  margin-top: 2.5rem;
+}

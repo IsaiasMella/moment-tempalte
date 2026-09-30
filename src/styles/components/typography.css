@@ -1,0 +1,105 @@
+/* Tipografía: títulos, etiquetas, bajadas y separadores de metadatos. */
+
+.display {
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  text-wrap: balance;
+  font-size: clamp(2.75rem, 8vw, 7.5rem);
+  line-height: .95;
+}
+
+.title-xl {
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  text-wrap: balance;
+  font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.title-lg {
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  text-wrap: balance;
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+  line-height: 1.08;
+}
+
+.title-md {
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  font-size: clamp(1.35rem, 2.1vw, 1.85rem);
+  line-height: 1.12;
+}
+
+.label {
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-size: .6875rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.label-soft {
+  color: var(--muted-foreground);
+}
+
+.meta-row {
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3rem .5rem;
+  display: flex;
+}
+
+.meta-row > :not(:last-child):after {
+  content: "·";
+  margin-left: .5rem;
+}
+
+.lede {
+  max-width: 34rem;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.caption {
+  color: var(--muted-foreground);
+  font-size: .8125rem;
+  line-height: 1.5;
+}
+
+.caption a {
+  color: inherit;
+  text-underline-offset: 2px;
+  text-decoration: underline;
+}
+
+.link {
+  padding-bottom: 2px;
+  display: inline-block;
+  position: relative;
+}
+
+.link:after {
+  transform-origin: 100%;
+  height: 1px;
+  transition: transform .45s var(--ease);
+  content: "";
+  background: currentColor;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: scaleX(0);
+}
+
+.link:hover:after, .link:focus-visible:after {
+  transform-origin: 0;
+  transform: scaleX(1);
+}

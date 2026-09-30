@@ -1,0 +1,163 @@
+/* Página de álbum: portada, bajada, pie, relacionados y "siguiente". */
+
+.post-hero {
+  background: var(--inverted);
+  color: var(--on-image);
+  height: min(92svh, 62rem);
+  min-height: 26rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+.post-hero-media img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.post-hero-scrim {
+  background: linear-gradient(oklch(10% 0 0 / .3) 0%, oklch(10% 0 0 / .22) 52%, oklch(10% 0 0 / .74) 100%);
+  position: absolute;
+  inset: 0;
+}
+
+.post-hero-body {
+  z-index: 2;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  padding-bottom: clamp(3rem, 7vh, 5.5rem);
+  display: flex;
+  position: relative;
+}
+
+.post-hero-title {
+  max-width: 16ch;
+}
+
+.post-kicker {
+  opacity: .82;
+  margin-bottom: 1.25rem;
+}
+
+@media (width <= 40rem) {
+  .post-kicker {
+    flex-direction: column;
+    gap: .3rem;
+  }
+
+  .post-kicker > :not(:last-child):after {
+    content: none;
+  }
+}
+
+.post-head {
+  padding-top: clamp(3rem, 8vh, 7rem);
+  padding-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.post-head-title {
+  max-width: 18ch;
+}
+
+.post-head .post-kicker {
+  opacity: 1;
+}
+
+.post-figure-inline {
+  margin-block: clamp(2rem, 4vw, 3rem) clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.post-lede {
+  font-family: var(--font-title);
+  font-size: clamp(1.375rem, 2.6vw, 2rem);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  text-wrap: pretty;
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.3;
+}
+
+.post-footer {
+  border-top: var(--rule-thin);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  display: flex;
+}
+
+.post-footer-tags, .post-footer-actions {
+  flex-wrap: wrap;
+  gap: .5rem;
+  display: flex;
+}
+
+.post-related-head {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  display: flex;
+}
+
+.post-next {
+  background: var(--inverted);
+  color: var(--on-image);
+  height: min(70svh, 44rem);
+  min-height: 22rem;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-next-media {
+  position: absolute;
+  inset: 0;
+}
+
+.post-next-media img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: transform 1.6s var(--ease-image);
+}
+
+.post-next:hover .post-next-media img {
+  transform: scale(1.05);
+}
+
+.post-next-scrim {
+  transition: background-color .6s var(--ease);
+  background: oklch(10% 0 0 / .45);
+  position: absolute;
+  inset: 0;
+}
+
+.post-next:hover .post-next-scrim {
+  background: oklch(10% 0 0 / .32);
+}
+
+.post-next-body {
+  z-index: 2;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+.post-next-title {
+  max-width: 16ch;
+}

@@ -1,0 +1,102 @@
+/* Botones y enlaces con flecha. */
+
+.btn {
+  border-radius: var(--radius-control);
+  min-height: 3rem;
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
+  border: 1px solid #0000;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  padding: .875rem 1.875rem;
+  font-size: .6875rem;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+}
+
+.btn svg {
+  width: .875rem;
+  height: .875rem;
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.btn-accent:hover {
+  background: var(--btn-hover-fill);
+  color: var(--btn-hover-label);
+}
+
+.btn-outline {
+  background: none;
+  border-color: currentColor;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .btn-outline {
+    border-color: color-mix(in oklab, currentcolor 50%, transparent);
+  }
+}
+
+.btn-outline {
+  color: inherit;
+}
+
+.btn-outline:hover {
+  color: var(--foreground);
+  background: currentColor;
+  border-color: currentColor;
+}
+
+.btn-outline:hover > * {
+  color: var(--background);
+}
+
+.section-inverted .btn-outline:hover, .site-footer--inverted .btn-outline:hover, .home-studio .btn-outline:hover, .card-header .btn-outline:hover {
+  color: var(--inverted-foreground);
+}
+
+.section-inverted .btn-outline:hover > *, .site-footer--inverted .btn-outline:hover > *, .home-studio .btn-outline:hover > *, .card-header .btn-outline:hover > * {
+  color: var(--inverted);
+}
+
+.btn-sm {
+  min-height: 2.5rem;
+  padding: .5rem 1.375rem;
+  font-size: .625rem;
+}
+
+.btn[disabled] {
+  cursor: wait;
+  opacity: .6;
+}
+
+.arrow-link {
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  border-bottom: 1px solid;
+  align-items: center;
+  gap: .75rem;
+  padding-bottom: .375rem;
+  font-size: .6875rem;
+  font-weight: 500;
+  display: inline-flex;
+}
+
+.arrow-link svg {
+  width: .875rem;
+  height: .875rem;
+  transition: transform .45s var(--ease);
+}
+
+.arrow-link:hover svg {
+  transform: translate(.375rem);
+}

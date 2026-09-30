@@ -1,0 +1,92 @@
+/* Estilos base: reset propio del tema sobre el de Tailwind, enlaces, foco y selección. */
+
+*, :before, :after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--background);
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  margin: 0;
+  line-height: 1.1;
+}
+
+p, ul, ol, li, dl, dd, hr, pre, form, table, figure, figcaption, blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+ul[class], ol[class] {
+  padding: 0;
+  list-style: none;
+}
+
+img, svg, video {
+  max-width: 100%;
+  display: block;
+}
+
+img {
+  height: auto;
+}
+
+input, button, select, textarea {
+  font: inherit;
+  appearance: none;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+hr {
+  border: 0;
+  border-top: var(--rule-thin);
+  width: 100%;
+  height: 0;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+mark {
+  background: var(--accent-soft);
+  color: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  text-shadow: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}

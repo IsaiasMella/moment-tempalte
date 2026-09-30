@@ -1,0 +1,43 @@
+/* Estructura: contenedores de ancho, secciones y espaciado vertical. */
+
+.viewport {
+  flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--layout-wide);
+  padding: 0 var(--gutter);
+  margin: 0 auto;
+}
+
+.wrap-reading {
+  max-width: calc(var(--layout-reading) + var(--gutter) * 2);
+}
+
+.wrap-mid {
+  max-width: 76rem;
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+
+.section-tight {
+  padding-block: calc(var(--space-section) * .55);
+}
+
+.section-wash {
+  background: var(--background-wash);
+}
+
+.section-inverted {
+  background: var(--inverted);
+  color: var(--inverted-foreground);
+}

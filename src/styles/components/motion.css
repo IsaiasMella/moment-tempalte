@@ -1,0 +1,51 @@
+/* Animaciones de aparición al hacer scroll (data-reveal) y bloqueo de scroll con menús abiertos. */
+
+.js [data-reveal] {
+  --reveal-delay: 0s;
+}
+
+.js [data-reveal="image"] > * {
+  clip-path: inset(0 0 100%);
+  transition: clip-path .7s var(--ease-image) var(--reveal-delay);
+}
+
+.js [data-reveal="image"] img {
+  transition: transform .9s var(--ease-image) var(--reveal-delay);
+  transform: scale(1.08);
+}
+
+.js [data-reveal="up"] {
+  opacity: 0;
+  transition: opacity .7s var(--ease) var(--reveal-delay), transform .7s var(--ease) var(--reveal-delay);
+  transform: translateY(1.5rem);
+}
+
+.js [data-reveal="fade"] {
+  opacity: 0;
+  transition: opacity 1.1s var(--ease) var(--reveal-delay);
+}
+
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-reveal="image"].is-revealed > * {
+  clip-path: inset(0);
+}
+
+.js [data-reveal="image"].is-revealed img {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal], .js [data-reveal] > *, .js [data-reveal] img {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.has-open-menu, .has-open-lightbox, .has-open-share {
+  overflow: hidden;
+}

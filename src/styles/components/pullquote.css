@@ -1,0 +1,70 @@
+/* Citas destacadas. */
+
+.pullquote {
+  max-width: 26ch;
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-tracking);
+  text-wrap: balance;
+  margin: clamp(3rem, 6vw, 4.5rem) 0;
+  line-height: 1.25;
+}
+
+.pullquote:before {
+  width: .8em;
+  height: .55em;
+  color: var(--accent-text);
+  content: "“";
+  letter-spacing: 0;
+  margin: 0 0 1.25rem;
+  font-family: Georgia, Times New Roman, serif;
+  font-size: clamp(4rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1;
+  display: block;
+}
+
+.pullquote-attribution {
+  color: var(--muted-foreground);
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin-top: 1.25rem;
+  font-size: .625rem;
+  font-weight: 500;
+  display: block;
+}
+
+.pullquote-alt {
+  max-width: none;
+  color: var(--foreground);
+  padding: 0 2.75rem;
+  font-size: 1.375rem;
+  line-height: 1.35;
+  position: relative;
+}
+
+.pullquote-alt:before, .pullquote-alt:after {
+  width: auto;
+  height: auto;
+  color: var(--muted-foreground);
+  font-family: var(--font-display);
+  margin: 0;
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+  position: absolute;
+}
+
+.pullquote-alt:before {
+  content: "“";
+  top: -.35rem;
+  left: 0;
+}
+
+.pullquote-alt:after {
+  content: "”";
+  bottom: -.9rem;
+  right: 0;
+}

@@ -1,0 +1,33 @@
+/* Etiquetas tipo "píldora" (categorías y tags). */
+
+.pill {
+  border: 1px solid;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: .5rem 1.375rem;
+  display: inline-flex;
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  .pill {
+    border-color: color-mix(in oklab, currentcolor 50%, transparent);
+  }
+}
+
+.pill {
+  border-radius: var(--radius-control);
+  color: inherit;
+  font-family: var(--font-label);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  transition: background-color var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
+  font-size: .625rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.pill:hover, .pill-current {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+}

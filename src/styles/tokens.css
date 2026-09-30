@@ -1,0 +1,140 @@
+/*
+ * Tokens de diseño: colores, tipografías, medidas y animaciones.
+ * Cambiando estos valores se ajusta todo el sitio. El modo oscuro redefine los colores más abajo.
+ */
+:root {
+  color-scheme: light;
+  --background: oklch(98.2% 0 0);
+  --background-wash: oklch(95.5% 0 0);
+  --surface: oklch(98.2% 0 0);
+  --foreground: oklch(19% 0 0);
+  --muted: oklch(93% 0 0);
+  --muted-foreground: oklch(51% 0 0);
+  --ink-soft: oklch(36% 0 0);
+  --brand: oklch(19% 0 0);
+  --accent: var(--brand);
+  --accent-foreground: oklch(100% 0 0);
+  --accent-text: var(--accent);
+  --accent-on-dark: var(--accent);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  :root {
+    --accent-on-dark: color-mix(in oklab, var(--accent) 70%, white);
+  }
+}
+
+:root {
+  --accent-soft: var(--accent);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  :root {
+    --accent-soft: color-mix(in oklab, var(--accent) 12%, var(--background));
+  }
+}
+
+:root {
+  --inverted: oklch(15.5% 0 0);
+  --inverted-foreground: oklch(95% 0 0);
+  --masthead: var(--background);
+  --masthead-foreground: var(--foreground);
+  --footer: var(--background-wash);
+  --border: oklch(86% 0 0);
+  --border-strong: oklch(19% 0 0);
+  --rule-thin: 1px solid var(--border);
+  --rule-strong: 1px solid var(--border-strong);
+  --radius: 2px;
+  --radius-control: 999px;
+  --font-display: "Marcellus", "Hoefler Text", "Iowan Old Style", Palatino, Georgia, serif;
+  --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
+  --font-label: var(--font-sans);
+  --font-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  --font-title: var(--font-display);
+  --title-weight: 400;
+  --title-tracking: -.015em;
+  --layout-wide: 104rem;
+  --layout-reading: 38rem;
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --space-section: clamp(4.5rem, 9vw, 10rem);
+  --header-height: 4.5rem;
+  --header-height-pinned: 3.5rem;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-image: cubic-bezier(.16, 1, .3, 1);
+  --btn-hover-fill: var(--ink-soft);
+  --btn-hover-label: var(--background);
+}
+
+@media (width >= 64rem) {
+  :root {
+    --header-height: 5.5rem;
+    --header-height-pinned: 4rem;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: oklch(14.5% 0 0);
+  --background-wash: oklch(18.5% 0 0);
+  --surface: oklch(14.5% 0 0);
+  --foreground: oklch(95% 0 0);
+  --muted: oklch(24% 0 0);
+  --muted-foreground: oklch(70% 0 0);
+  --ink-soft: oklch(82% 0 0);
+  --brand: oklch(97% 0 0);
+  --accent: var(--brand);
+  --accent-foreground: oklch(14% 0 0);
+  --accent-soft: var(--accent);
+}
+
+@supports (color: color-mix(in lab, red, red)) {
+  :root[data-theme="dark"] {
+    --accent-soft: color-mix(in oklab, var(--accent) 16%, var(--background));
+  }
+}
+
+:root[data-theme="dark"] {
+  --inverted: oklch(11% 0 0);
+  --inverted-foreground: oklch(96% 0 0);
+  --border: oklch(100% 0 0 / .15);
+  --border-strong: oklch(80% 0 0);
+  --btn-hover-fill: var(--ink-soft);
+}
+
+@supports (color: oklch(from white l c h)) {
+  :root {
+    --accent-foreground: oklch(from var(--accent) clamp(0, (.58 - l) * 1000, 1) 0 0);
+    --accent-on-dark: oklch(from var(--accent) max(l, .9) c h);
+    --accent-text: oklch(from var(--accent) min(l, .54) c h);
+  }
+
+  :root[data-theme="dark"] {
+    --accent: oklch(from var(--brand) max(l, .74) c h);
+    --accent-text: oklch(from var(--accent) max(l, .74) c h);
+  }
+}
+
+.site-header--over, .home-hero, .home-studio, .tile-overlay, .post-hero, .post-next, .site-footer--inverted, .card-header {
+  --accent: var(--accent-on-dark);
+  --accent-text: var(--accent-on-dark);
+  --accent-foreground: oklch(14% 0 0);
+  --btn-hover-fill: var(--inverted-foreground);
+  --btn-hover-label: var(--inverted);
+}
+
+/* Tokens agregados al tokenizar: colores y tiempos que estaban repetidos a mano en los componentes. */
+:root {
+  /* Texto sobre fotografías (portadas, carrusel, tarjetas). No cambia con el modo oscuro. */
+  --on-image: oklch(99% 0 0);
+  --on-image-strong: oklch(100% 0 0);
+
+  /* Visor de fotos a pantalla completa. */
+  --lightbox-backdrop: oklch(7% 0 0 / .98);
+  --lightbox-surface: oklch(7% 0 0 / .92);
+  --lightbox-muted: oklch(82% 0 0);
+
+  /* Duraciones de las transiciones. */
+  --duration-fast: .3s;
+  --duration-base: .4s;
+  --duration-slow: .5s;
+}

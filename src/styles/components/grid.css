@@ -1,0 +1,56 @@
+/* Grillas de tarjetas (2, 3 y 4 columnas y mosaico). */
+
+.grid {
+  --grid-cols: 1;
+  --grid-gap: clamp(.75rem, 1.6vw, 1.75rem);
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: start;
+  display: grid;
+}
+
+@media (width >= 40rem) {
+  .grid {
+    --grid-cols: 2;
+  }
+}
+
+@media (width >= 64rem) {
+  .grid-2 {
+    --grid-cols: 2;
+  }
+
+  .grid-3, .grid-4 {
+    --grid-cols: 3;
+  }
+}
+
+@media (width >= 88rem) {
+  .grid-4 {
+    --grid-cols: 4;
+  }
+}
+
+.grid.is-columned {
+  align-items: stretch;
+  gap: var(--grid-gap);
+  display: flex;
+}
+
+.grid-column {
+  gap: var(--grid-gap);
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+
+.grid-column > .tile:last-child, .grid-column > .tile:last-child .tile-link {
+  flex-direction: column;
+  flex: auto;
+  display: flex;
+}
+
+.grid-column > .tile:last-child .tile-media {
+  flex: auto;
+}

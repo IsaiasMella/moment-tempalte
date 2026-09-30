@@ -1,0 +1,14 @@
+/* Encabezado de páginas fijas (Estudio, Precios, Contacto…). */
+
+.page-head {
+  padding-top: clamp(4rem, 12vh, 9rem);
+  padding-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+.page-head-title {
+  max-width: 14ch;
+}
+
+.page-head-lede {
+  margin-top: 1.5rem;
+}
