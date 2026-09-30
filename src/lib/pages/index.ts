@@ -3,9 +3,11 @@ import type { ContactPage, HomePage, PricingPage, PrivacyPage, SiteSettings, Stu
 import { applySiteSettings } from './site';
 import * as content from './content';
 
-/** Routes rendered by dedicated pages instead of the reference catch-all. */
-export function isGeneratedRoute(_route: string): boolean {
-  return false;
+/** Routes rendered by dedicated Astro pages (src/pages/*.astro) instead of the reference catch-all. */
+const astroRoutes = new Set(['privacy/', '404/']);
+
+export function isGeneratedRoute(route: string): boolean {
+  return astroRoutes.has(route);
 }
 
 async function data<T>(collection: string, id: string): Promise<T | undefined> {

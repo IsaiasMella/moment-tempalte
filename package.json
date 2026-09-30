@@ -17,7 +17,11 @@
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
-    "tailwindcss": "^4.3.3"
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.20.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3"
   }
 }

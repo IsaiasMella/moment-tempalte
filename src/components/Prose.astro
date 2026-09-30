@@ -1,0 +1,28 @@
+---
+/**
+ * A block of long-form text with the theme's typography (`.prose`). Pass Markdown
+ * from the CMS as `markdown` (with optional `{key}` placeholders filled from `vars`),
+ * or put HTML/components in the slot. Tables become scrollable and images open in
+ * the lightbox (src/scripts/prose.ts).
+ * React/Next.js equivalent: a <Prose> wrapper around react-markdown / MDX output.
+ */
+import { markdown as renderMarkdown } from '../lib/markdown';
+
+interface Props {
+  /** Markdown source; when omitted the slot content is used. */
+  markdown?: string;
+  /** Values for `{key}` placeholders in `markdown`, e.g. `{ email }`. */
+  vars?: Record<string, string>;
+  /** Extra classes, e.g. "prose-page". */
+  class?: string;
+  /** Accessible name for scrollable tables without a caption. */
+  tableLabel?: string;
+}
+
+const { markdown, vars, class: className, tableLabel = 'Table' } = Astro.props;
+---
+<div class:list={['prose', className]} data-table-label={tableLabel}>{markdown !== undefined ? <Fragment set:html={renderMarkdown(markdown, vars)} /> : <slot />}</div>
+
+<script>
+  import '../scripts/prose';
+</script>

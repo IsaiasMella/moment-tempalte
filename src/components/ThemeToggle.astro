@@ -1,0 +1,9 @@
+---
+/**
+ * Light/dark switch button. It has no script of its own: ThemeScript.astro wires
+ * every `[data-theme-toggle]` and keeps its aria-label in sync; CSS shows the
+ * sun or the moon depending on the current theme.
+ */
+import Icon from './Icon.astro';
+---
+<button type="button" class="icon-btn" data-theme-toggle aria-label="Switch colour mode"><Icon name="sun" class="theme-icon-sun" /><Icon name="moon" class="theme-icon-moon" /></button>

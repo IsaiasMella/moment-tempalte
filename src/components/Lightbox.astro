@@ -1,0 +1,14 @@
+---
+/**
+ * The full-screen photo viewer (a native <dialog>), rendered once per page.
+ * Any element with `data-lightbox` opens it (see src/scripts/lightbox.ts for the
+ * data attributes it reads); elements sharing `data-lightbox-group` form a gallery.
+ * React/Next.js equivalent: a modal portal mounted once in the root layout.
+ */
+import Icon from './Icon.astro';
+---
+<dialog class="lightbox" data-lightbox-dialog aria-label="Photograph viewer"><div class="lightbox-inner"><button class="lightbox-close" type="button" data-lightbox-close aria-label="Close"><Icon name="close" size={24} /></button><button class="lightbox-nav lightbox-prev" type="button" data-lightbox-prev aria-label="Previous photograph"><Icon name="arrow-left" size={32} /></button><figure class="lightbox-figure"><img data-lightbox-img alt="" /><figcaption class="lightbox-caption"><span data-lightbox-text></span><span class="lightbox-count" data-lightbox-count></span></figcaption></figure><button class="lightbox-nav lightbox-next" type="button" data-lightbox-next aria-label="Next photograph"><Icon name="arrow-right" size={32} /></button></div></dialog>
+
+<script>
+  import '../scripts/lightbox';
+</script>

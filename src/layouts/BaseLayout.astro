@@ -1,0 +1,106 @@
+---
+/**
+ * The HTML shell every page renders inside: <head> (meta, SEO, theme script,
+ * global CSS), the skip link, header, menu drawer, footer and the photo viewer.
+ * Pages pass their content through the default <slot /> and may add tags to
+ * <head> with `<Fragment slot="head">…</Fragment>`.
+ *
+ * React/Next.js equivalent: app/layout.tsx, where <slot /> is `children`
+ * and the SEO props play the role of the `metadata` export.
+ */
+import type { ComponentProps } from 'astro/types';
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Lightbox from '../components/Lightbox.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import SEO from '../components/SEO.astro';
+import ThemeScript from '../components/ThemeScript.astro';
+import { getSiteSettings } from '../lib/content';
+import { pageTitle, websiteJsonLd } from '../lib/site';
+
+type SEOProps = ComponentProps<typeof SEO>;
+
+interface Props {
+  /** Page title without the site name ("Privacy" -> "Privacy | Moments"). Empty = site name only. */
+  title: string;
+  /** Use this exact document title instead (e.g. the home page). */
+  fullTitle?: string;
+  /** Meta description; defaults to the site description from settings. */
+  description?: string;
+  /** Social preview image (path or URL) and its alt text; default from settings `seo`. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogImageMeta?: SEOProps['imageMeta'];
+  ogType?: SEOProps['type'];
+  article?: SEOProps['article'];
+  /** Canonical path (defaults to the current URL). */
+  canonical?: string;
+  noindex?: boolean;
+  /** JSON-LD for this page; defaults to the site-wide WebSite/Organization schema. */
+  jsonLd?: SEOProps['jsonLd'];
+  /** "over": transparent header over a full-bleed hero. */
+  header?: 'default' | 'over';
+  /** Footer style; "inverted" is the theme default. */
+  footer?: 'inverted' | 'plain' | 'default';
+}
+
+const settings = await getSiteSettings();
+const site = Astro.site ?? Astro.url;
+const {
+  title,
+  fullTitle = pageTitle(title, settings),
+  description = settings.seo.description,
+  ogImage = settings.seo.ogImage || '/og-image.jpg',
+  ogImageAlt = settings.seo.ogImageAlt,
+  ogImageMeta,
+  ogType,
+  article,
+  canonical,
+  noindex,
+  jsonLd = websiteJsonLd(settings, site),
+  header = 'default',
+  footer = 'inverted',
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href="/fonts/marcellus/Marcellus-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter/Inter-Variable-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#f9f9f9" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <SEO
+      title={fullTitle}
+      description={description}
+      siteName={settings.name}
+      canonical={canonical}
+      image={ogImage}
+      imageAlt={ogImageAlt}
+      imageMeta={ogImageMeta}
+      type={ogType}
+      article={article}
+      noindex={noindex}
+      jsonLd={jsonLd}
+    />
+    <ThemeScript />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div class="viewport">
+      <Header variant={header} />
+      <MobileMenu />
+      <main id="content" class="main"><slot /></main>
+      <Footer variant={footer} />
+    </div>
+    <Lightbox />
+    <script>
+      import '../scripts/autosize';
+    </script>
+  </body>
+</html>

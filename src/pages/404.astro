@@ -1,0 +1,11 @@
+---
+/**
+ * Not-found page. Astro emits it as dist/404.html, which static hosts serve for
+ * unknown URLs; scripts/finalize.mjs also copies it to /404/.
+ * React/Next.js equivalent: app/not-found.tsx.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page not found" description="The page you asked for could not be found." canonical="/404/" noindex>
+  <section class="wrap error-page"><div><p class="error-code" aria-hidden="true">404</p><h1 class="title-xl error-message">This page has moved on.</h1><p class="error-actions"><a class="btn btn-outline" href="/work/"><span>Back to the work</span></a></p></div></section>
+</BaseLayout>

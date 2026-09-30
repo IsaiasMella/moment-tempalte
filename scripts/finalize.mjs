@@ -6,5 +6,9 @@ for (const name of ['robots.txt', 'sitemap-index.xml', 'sitemap-0.xml', 'site.we
   const file = path.resolve('dist', name);
   if (fs.existsSync(file)) fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replaceAll(reference, origin));
 }
-const errorPage = path.resolve('dist/404/index.html');
-if (fs.existsSync(errorPage)) fs.copyFileSync(errorPage, path.resolve('dist/404.html'));
+// src/pages/404.astro builds dist/404.html (served by hosts for unknown URLs); keep /404/ too.
+const errorPage = path.resolve('dist/404.html');
+if (fs.existsSync(errorPage)) {
+  fs.mkdirSync(path.resolve('dist/404'), { recursive: true });
+  fs.copyFileSync(errorPage, path.resolve('dist/404/index.html'));
+}

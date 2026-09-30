@@ -1,0 +1,17 @@
+---
+/**
+ * /privacy/ — content from src/content/pages/privacy.yml (title, lede, Markdown body).
+ * React/Next.js equivalent: app/privacy/page.tsx.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHead from '../components/PageHead.astro';
+import Prose from '../components/Prose.astro';
+import { getPage, getSiteSettings } from '../lib/content';
+
+const page = await getPage('privacy');
+const { email, phone, name } = await getSiteSettings();
+---
+<BaseLayout title={page.seo.title} description={page.seo.description || undefined}>
+  <PageHead title={page.title} lede={page.lede} />
+  <div class="wrap wrap-mid section-tight"><Prose class="prose-page" markdown={page.body} vars={{ email, phone, name }} /></div>
+</BaseLayout>

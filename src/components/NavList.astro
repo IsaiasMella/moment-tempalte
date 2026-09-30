@@ -1,0 +1,21 @@
+---
+/**
+ * The `<li><a>` items of a navigation list, marking the current page/section
+ * with `aria-current="page"` (from `Astro.url`). The caller supplies the `<ul>`.
+ * React/Next.js equivalent: a nav that compares links against `usePathname()`.
+ */
+import type { Link } from '../lib/schemas';
+import { isCurrentLink } from '../lib/site';
+
+interface Props {
+  links: Link[];
+  /** Set false for lists that never mark the current page (footer columns). */
+  markCurrent?: boolean;
+}
+
+const { links, markCurrent = true } = Astro.props;
+const { pathname } = Astro.url;
+---
+{links.filter((link) => link.label || link.href).map((link) => (
+  <li><a href={link.href} aria-current={markCurrent && isCurrentLink(link.href, pathname) ? 'page' : undefined}>{link.label}</a></li>
+))}

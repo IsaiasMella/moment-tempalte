@@ -1,0 +1,23 @@
+---
+/**
+ * Site footer: newsletter signup, wordmark + description + socials, link columns
+ * and the credits line. Every text and link comes from settings `footer`.
+ * React/Next.js equivalent: a <Footer /> rendered by app/layout.tsx.
+ */
+import NavList from './NavList.astro';
+import NewsletterForm from './NewsletterForm.astro';
+import SocialLinks from './SocialLinks.astro';
+import Wordmark from './Wordmark.astro';
+import { getSiteSettings } from '../lib/content';
+
+interface Props {
+  /** "inverted" (dark band, the theme default), "plain" (page background) or "default" (footer tint). */
+  variant?: 'inverted' | 'plain' | 'default';
+}
+
+const { variant = 'inverted' } = Astro.props;
+const { footer } = await getSiteSettings();
+---
+<footer class:list={['site-footer', variant !== 'default' && `site-footer--${variant}`]}><div class="wrap"><div class="site-footer-signup"><div><h2 class="title-lg site-footer-signup-title">{footer.signupTitle}</h2>{footer.signupText && <p class="lede" style="margin-top:1rem">{footer.signupText}</p>}</div><NewsletterForm /></div></div><div class="wrap"><div class="site-footer-grid"><div class="site-footer-brand"><Wordmark large /><p class="site-footer-description">{footer.description}</p><div class="site-footer-socials"><SocialLinks iconClass="h-5 w-5" /></div></div>{footer.columns.map((column) => (
+  <nav class="site-footer-nav" aria-label={column.heading}><p class="site-footer-heading">{column.heading}</p><ul><NavList links={column.links} markCurrent={false} /></ul></nav>
+))}</div></div><div class="site-footer-bottom"><div class="wrap site-footer-bottom-inner"><p class="site-footer-credits"><span>{footer.copyright}</span></p>{footer.credit && <p>{footer.credit}</p>}</div></div></footer>

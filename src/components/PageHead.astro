@@ -1,0 +1,13 @@
+---
+/**
+ * Title block at the top of simple pages (studio, pricing, contact, privacy):
+ * a display heading and an optional lede, both revealed on scroll.
+ */
+interface Props {
+  title: string;
+  lede?: string;
+}
+
+const { title, lede } = Astro.props;
+---
+<header class="wrap wrap-mid page-head"><h1 class="display page-head-title" data-reveal="up">{title}</h1>{lede && <p class="lede page-head-lede" data-reveal="up">{lede}</p>}</header>

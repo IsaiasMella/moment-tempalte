@@ -1,0 +1,27 @@
+---
+/**
+ * Site header: wordmark, primary navigation (from settings `nav.primary`), theme
+ * toggle and the menu button that opens the drawer (MobileMenu.astro).
+ * On scroll it hides, and pins back into view when scrolling up (src/scripts/header.ts).
+ * React/Next.js equivalent: a <Header /> rendered by app/layout.tsx.
+ */
+import Icon from './Icon.astro';
+import NavList from './NavList.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import Wordmark from './Wordmark.astro';
+import { getSiteSettings } from '../lib/content';
+
+interface Props {
+  /** "over": transparent, light header laid over a full-bleed hero until it pins. */
+  variant?: 'default' | 'over';
+}
+
+const { variant = 'default' } = Astro.props;
+const settings = await getSiteSettings();
+const over = variant === 'over';
+---
+<div class:list={['site-header-slot', { 'site-header-slot--over': over }]}><header class:list={['site-header', { 'site-header--over': over }]} data-site-header><div class="wrap site-header-inner"><div class="site-header-brand"><Wordmark label={`${settings.name} home`} /></div><nav class="site-header-nav" aria-label="Main"><ul><NavList links={settings.nav.primary} /></ul></nav><div class="site-header-actions"><ThemeToggle /><button type="button" class="menu-toggle" aria-controls="site-drawer" aria-expanded="false" data-drawer-open><span class="menu-icon-open"><Icon name="menu" /></span><span class="menu-icon-close"><Icon name="close" /></span><span class="sr-only">Open menu</span></button></div></div></header></div>
+
+<script>
+  import '../scripts/header';
+</script>

@@ -1,0 +1,21 @@
+---
+/**
+ * The slide-in menu drawer (all screen sizes): primary and secondary navigation,
+ * social links and a theme toggle. Opened by the header's menu button; behaviour
+ * (focus trap, Escape, backdrop) lives in src/scripts/drawer.ts.
+ * React/Next.js equivalent: a <Drawer /> with open state, here driven by plain DOM script.
+ */
+import Icon from './Icon.astro';
+import NavList from './NavList.astro';
+import SocialLinks from './SocialLinks.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import Wordmark from './Wordmark.astro';
+import { getSiteSettings } from '../lib/content';
+
+const { nav } = await getSiteSettings();
+---
+<div class="menu-backdrop" data-drawer-backdrop hidden></div><div id="site-drawer" class="menu-panel" role="dialog" aria-modal="true" aria-label="Site menu" hidden data-drawer><div class="menu-panel-head"><Wordmark /><button type="button" class="icon-btn" data-drawer-close aria-label="Close menu"><Icon name="close" size={20} /></button></div><div class="menu-body"><ul class="menu-list menu-list-primary"><NavList links={nav.primary} /></ul>{nav.secondary.length > 0 && <><p class="menu-group">{nav.secondaryHeading}</p><ul class="menu-list menu-list-secondary"><NavList links={nav.secondary} /></ul></>}<div class="menu-foot"><SocialLinks /><ThemeToggle /></div></div></div>
+
+<script>
+  import '../scripts/drawer';
+</script>

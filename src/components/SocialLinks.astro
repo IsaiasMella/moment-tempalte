@@ -1,0 +1,21 @@
+---
+/**
+ * The row of social icon links from the settings (`socials`), used in the
+ * drawer, the footer and the contact page.
+ * React/Next.js equivalent: `socials.map((s) => <a …><Icon /></a>)` in a component.
+ */
+import Icon from './Icon.astro';
+import { getSiteSettings } from '../lib/content';
+import { socialHref, socialLabel } from '../lib/site';
+
+interface Props {
+  /** Tailwind size classes for the icons: "h-4 w-4" (drawer) or "h-5 w-5" (footer). */
+  iconClass?: string;
+}
+
+const { iconClass = 'h-4 w-4' } = Astro.props;
+const settings = await getSiteSettings();
+---
+{settings.socials.map((social) => (
+  <a class="icon-btn" href={socialHref(social, settings)} rel="me noopener" aria-label={socialLabel(social)}><Icon name={social.platform} class={iconClass} /></a>
+))}

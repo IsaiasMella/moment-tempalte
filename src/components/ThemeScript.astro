@@ -1,0 +1,126 @@
+---
+/**
+ * Inline <head> script, run before the page paints:
+ *  1. adds the `js` class to <html> (arms the CSS reveal animations; without JS
+ *     everything simply renders visible);
+ *  2. applies the stored or default colour theme (`data-theme`) with no flash;
+ *  3. once the DOM is ready, wires every `[data-theme-toggle]` button and starts
+ *     the scroll-reveal observer for `[data-reveal]` elements.
+ *
+ * It must be `is:inline` (not bundled, not deferred) to run before first paint.
+ * `define:vars` passes the build-time values in as constants.
+ * React/Next.js equivalent: the blocking script next-themes injects into <head>.
+ */
+interface Props {
+  /** Theme when the visitor has not chosen one: "light", "dark" or "system" (follow the OS). */
+  defaultColorMode?: 'light' | 'dark' | 'system';
+}
+
+const { defaultColorMode = 'light' } = Astro.props;
+/** Browser UI colour (`<meta name="theme-color">`) per theme; matches --background. */
+const themeColors = { light: '#f9f9f9', dark: '#0a0a0a' };
+const themeLabels = { light: 'Switch to dark mode', dark: 'Switch to light mode' };
+---
+<script is:inline define:vars={{ defaultColorMode, themeColors, themeLabels }}>
+  (() => {
+    const root = document.documentElement;
+
+    /* Marks the document as scripted, which is what arms every reveal.
+       Without it the page renders in full rather than blank: an animation
+       must never be the thing that makes content appear. */
+    root.classList.add("js");
+
+    const storageKey = "moments-color-mode";
+    const themePreference = window.matchMedia("(prefers-color-scheme: dark)");
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    let storedTheme;
+
+    try {
+      storedTheme = localStorage.getItem(storageKey);
+    } catch {
+      storedTheme = null;
+    }
+
+    const updateThemeButtons = (theme) => {
+      document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+        button.setAttribute("aria-label", themeLabels[theme]);
+      });
+    };
+
+    const setTheme = (theme, persist = false) => {
+      root.dataset.theme = theme;
+      themeColorMeta?.setAttribute("content", themeColors[theme]);
+      if (persist) {
+        storedTheme = theme;
+        try {
+          localStorage.setItem(storageKey, theme);
+        } catch {}
+      }
+      updateThemeButtons(theme);
+    };
+
+    /* A stored choice always wins. Otherwise the site's configured default
+       applies, and only "system" defers to the operating system. */
+    const preferredTheme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : defaultColorMode === "system"
+          ? themePreference.matches
+            ? "dark"
+            : "light"
+          : defaultColorMode;
+
+    setTheme(preferredTheme);
+
+    themePreference.addEventListener("change", (event) => {
+      if (defaultColorMode !== "system") return;
+      if (storedTheme === "light" || storedTheme === "dark") return;
+      setTheme(event.matches ? "dark" : "light");
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateThemeButtons(root.dataset.theme || preferredTheme);
+      document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+        button.addEventListener("click", () => {
+          setTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
+        });
+      });
+
+      const targets = document.querySelectorAll("[data-reveal]");
+      if (!targets.length) return;
+
+      if (
+        !("IntersectionObserver" in window) ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        targets.forEach((target) => target.classList.add("is-revealed"));
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-revealed");
+            observer.unobserve(entry.target);
+          });
+        },
+        /* Fire as soon as any part of the block enters, and reach 10% past
+           the bottom edge, so a section just under the fold has already
+           arrived by the time it is scrolled to. */
+        { threshold: 0, rootMargin: "0px 0px 10% 0px" },
+      );
+
+      /* A group staggers its children rather than revealing them at once:
+         the attribute's value is the step in milliseconds. */
+      document.querySelectorAll("[data-reveal-group]").forEach((group) => {
+        const step = Number(group.getAttribute("data-reveal-group")) || 0;
+        group.querySelectorAll("[data-reveal]").forEach((item, index) => {
+          item.style.setProperty("--reveal-delay", `${index * step}ms`);
+        });
+      });
+
+      targets.forEach((target) => observer.observe(target));
+    });
+  })();
+</script>
