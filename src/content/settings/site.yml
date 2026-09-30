@@ -1,0 +1,71 @@
+name: Moments
+tagline: Wedding and portrait photography, quietly observed
+photographer: Andrei Alba
+email: hello@example.com
+phone: ""
+location: Lisbon, Portugal
+locationNote: Travelling across Europe
+logo: ""
+seo:
+  description: "An image-led Astro theme for a solo wedding and portrait photographer: full-bleed openings, a masonry wall of work, and galleries packed into justified rows so no photograph is cropped to fit a grid."
+  ogImage: /og-image.jpg
+  ogImageAlt: Moments — Wedding and portrait photography, quietly observed
+socials:
+  - platform: instagram
+    label: Instagram
+    url: https://instagram.com
+  - platform: pinterest
+    label: Pinterest
+    url: https://www.pinterest.com
+  - platform: email
+    label: Email
+nav:
+  primary:
+    - label: Work
+      href: /work/
+    - label: Studio
+      href: /studio/
+    - label: Pricing
+      href: /pricing/
+    - label: Say hello
+      href: /contact/
+  secondaryHeading: More
+  secondary:
+    - label: Styleguide
+      href: /styleguide/
+    - label: Privacy
+      href: /privacy/
+footer:
+  signupTitle: New work, a few times a year
+  signupText: No newsletter about newsletters. Just the pictures.
+  signupPlaceholder: you@example.com
+  signupButton: Sign up
+  description: One photographer, weddings and portraits across Europe, mostly on film. Twelve to fifteen days a year, and the sessions in between.
+  columns:
+    - heading: Work
+      links:
+        - label: Everything
+          href: /work/
+        - label: Weddings
+          href: /collection/weddings/
+        - label: Portraits
+          href: /collection/portraits/
+    - heading: Studio
+      links:
+        - label: About
+          href: /studio/
+        - label: Pricing
+          href: /pricing/
+        - label: Say hello
+          href: /contact/
+    - heading: More
+      links:
+        - label: Styleguide
+          href: /styleguide/
+        - label: Privacy
+          href: /privacy/
+  copyright: © 2026 Moments. All rights reserved.
+  credit: Built with Astro
+forms:
+  enquiryAction: ""
+  newsletterAction: ""

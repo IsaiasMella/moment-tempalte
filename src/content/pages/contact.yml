@@ -1,0 +1,21 @@
+seo:
+  title: Say hello
+  description: Tell me the date, the place, and roughly how many people.
+title: Say hello
+lede: Tell me the date, the place, and roughly how many people. Every enquiry answered within three days.
+emailHeading: Write to me
+sections:
+  - heading: What to send
+    text: The date, where it is happening, and a rough headcount is enough to start. If you have a plan for the day, send that too.
+  - heading: Response time
+    text: Every enquiry answered within three days. If you have not heard back inside a week, the message did not arrive. Send it again.
+basedLabel: Based
+phoneLabel: Phone
+followLabel: Follow
+form:
+  nameLabel: Your names
+  emailLabel: Email address
+  dateLabel: The date
+  placeLabel: Where
+  messageLabel: Tell me about the day
+  buttonLabel: Send enquiry

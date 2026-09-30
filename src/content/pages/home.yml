@@ -1,0 +1,54 @@
+seo:
+  title: Moments - A photography Astro theme for weddings and portraits
+  description: "An image-led Astro theme for a solo wedding and portrait photographer: full-bleed openings, a masonry wall of work, and galleries packed into justified rows so no photograph is cropped to fit a grid."
+heading: Moments — Wedding and portrait photography, quietly observed
+studio:
+  image: /_astro/studio.B5VMrWep_6HeWm.webp
+  imageAlt: A couple photographed against a plain wall in north light.
+  title: The studio
+  text: One photographer, weddings and portraits across Europe, mostly on film. Twelve to fifteen days a year, and the sessions in between.
+  buttonLabel: Read more
+  buttonLink: /studio/
+  figures:
+    - label: Stories
+      value: "19"
+    - label: Since
+      value: "2024"
+testimonials:
+  title: Kind words
+  items:
+    - quote: We forgot you were there, which I think was the point. Then the photographs arrived and we cried at the kitchen table.
+      names: Elena & Marc
+      category: Weddings
+      context: Cap de Formentor, Mallorca
+      image: /_astro/elena-and-marc.CxkXYnVJ_Z1xRmeU.webp
+      imageAlt: A bride and groom close together, her arm around his neck, looking at the camera.
+    - quote: Two of us, a registrar and a dog. Somehow it looks like the biggest day of our lives, because it was.
+      names: Sofia & James
+      category: Weddings
+      context: A January elopement
+      image: /_astro/sofia-and-james.B7oUM3dS_12ot4I.webp
+      imageAlt: A groom kisses his bride on the forehead, her veil lifted by the wind.
+    - quote: Nothing posed, nothing missed. Our parents have the same three frames on their walls.
+      names: Clara & Jonas
+      category: Weddings
+      context: On the water
+      image: /_astro/clara-and-jonas.C4MoA6B9_hY1E1.webp
+      imageAlt: A couple in white, foreheads almost touching, laughing.
+    - quote: A hundred people ate dinner and not one of them noticed the camera. Every face we love is in there.
+      names: Amara & Theo
+      category: Weddings
+      context: The long table
+      image: /_astro/amara-and-theo.ApqwdpWQ_16VFvH.webp
+      imageAlt: A groom kisses his bride on the forehead under green trees.
+    - quote: I dreaded it. Two hours later I had a photograph of myself I do not mind looking at.
+      names: Rosalind
+      category: Portraits
+      context: A studio sitting
+      image: /_astro/rosalind.D-Ow-VVe_D1PFg.webp
+      imageAlt: A woman smiling beside a window in soft light.
+cta:
+  title: Say hello
+  text: Tell me the date, the place, and roughly how many people. Every enquiry answered within three days.
+  buttonLabel: Get in touch
+  buttonLink: /contact/

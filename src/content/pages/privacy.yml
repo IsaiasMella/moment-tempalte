@@ -1,0 +1,19 @@
+seo:
+  title: Privacy
+  description: Privacy policy for Moments.
+title: Privacy
+lede: What a studio running this theme may collect, how it can be used, and how to get in touch about it.
+body: |
+  ## What is collected
+
+  The site itself stores nothing on a server. One thing is kept in your own browser and never leaves it: which colour mode you chose.
+
+  If the mailing list or the enquiry form has been connected to a provider, the address and the message you send go to that provider. Nothing else is gathered.
+
+  ## How it is used
+
+  An enquiry is answered and then kept only as long as the conversation needs it. A mailing list address is used to send the work, and nothing else.
+
+  ## Contact
+
+  For anything about your data, write to [{email}](mailto:{email}).
