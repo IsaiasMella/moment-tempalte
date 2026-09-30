@@ -1,0 +1,889 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Panel de administración (Sveltia CMS) · https://sveltiacms.app
+#  Guía de uso en español: docs/CMS.md
+#
+#  IMPORTANTE: los nombres de campo (`name`) deben coincidir EXACTAMENTE con
+#  los esquemas de src/lib/albums/schema.ts y src/lib/pages/schema.ts.
+#  Si se cambia uno, hay que cambiar el otro o la compilación de Astro falla.
+# ─────────────────────────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: IsaiasMella/moment-tempalte
+  branch: main
+  # URL del Worker de Cloudflare "sveltia-cms-auth" (inicio de sesión con GitHub
+  # en el sitio publicado). Reemplazar TU-SUBDOMINIO por el subdominio real de
+  # tu cuenta de Cloudflare Workers. Pasos en docs/CMS.md → "Login en producción".
+  # En local no hace falta: se usa "Trabajar con repositorio local".
+  base_url: https://sveltia-cms-auth.TU-SUBDOMINIO.workers.dev
+  commit_messages:
+    create: 'Crear {{collection}} “{{slug}}”'
+    update: 'Actualizar {{collection}} “{{slug}}”'
+    delete: 'Eliminar {{collection}} “{{slug}}”'
+    uploadMedia: 'Subir “{{path}}”'
+    deleteMedia: 'Eliminar “{{path}}”'
+
+# Nombre y logo que se ven en la pantalla de ingreso y en la pestaña del navegador.
+# (site_url / display_url se omiten a propósito: por defecto usan el dominio
+# desde el que se abre /admin/, que es el correcto tanto en local como publicado.)
+app_title: Moments · Panel
+logo:
+  src: /icon-512.png
+
+# Imágenes subidas: se guardan en public/uploads y en el contenido quedan como /uploads/…
+media_folder: public/uploads
+public_folder: /uploads
+
+media_libraries:
+  default:
+    config:
+      # Tamaño máximo del archivo original: 40 MB.
+      max_file_size: 41943040
+      # "Foto Boda (1).JPG" → "foto-boda-1.webp"
+      slugify_filename: true
+      # Toda foto (JPEG, PNG, HEIC del iPhone, AVIF…) se convierte a WebP y se
+      # achica a 2400 px en el lado más largo antes de subirla. Nunca se agranda.
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 2400
+          height: 2400
+  # Sin bancos de imágenes (Unsplash, Pexels…): el portfolio es solo fotos propias.
+  stock_assets: false
+
+# Nombres de archivo de los álbumes: minúsculas, sin acentos ni eñes, con guiones.
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+  lowercase: true
+  trim: true
+  maxlength: 80
+
+output:
+  # Los campos opcionales vacíos no se escriben en el archivo (así Astro aplica
+  # sus valores por defecto; p. ej. una fecha de actualización vacía no rompe la compilación).
+  omit_empty_optional_fields: true
+
+editor:
+  # Sin panel de vista previa: el formulario ocupa todo el ancho.
+  # Para ver el resultado real, usar el enlace "Ver en el sitio" o recargar la web.
+  preview: false
+
+# Formato por defecto de los editores de texto enriquecido.
+field_defaults:
+  richtext:
+    editor_components: []
+    use_emoji_autocomplete: false
+
+collections:
+  # ───────────────────────────── ÁLBUMES ─────────────────────────────
+  - name: albums
+    label: Álbumes
+    label_singular: Álbum
+    icon: photo_library
+    description: >-
+      Bodas y sesiones de retrato. Cada álbum es una página del portfolio
+      (/story/nombre-del-album/) con portada, textos y galerías de fotos.
+    folder: src/content/albums
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    duplicate: true
+    identifier_field: title
+    slug:
+      template: '{{title}}'
+      editable: [create]
+      hint: >-
+        Es la dirección del álbum en la web (/story/…/). Se genera sola a partir
+        del título; conviene no cambiarla una vez publicado.
+    preview_path: story/{{slug}}/
+    aliases_field: false
+    summary: "{{draft | ternary('✎ BORRADOR · ', '')}}{{featured | ternary('★ ', '')}}{{title}} — {{date | date('DD/MM/YYYY')}} · {{location}}"
+    thumbnail: cover.src
+    sortable_fields:
+      fields: [date, title, location, category]
+      default:
+        field: date
+        direction: descending
+    view_filters:
+      filters:
+        - name: published
+          label: Publicados
+          field: draft
+          eq: false
+        - name: drafts
+          label: Borradores
+          field: draft
+          eq: true
+        - name: featured
+          label: Destacados en portada
+          field: featured
+          eq: true
+        - name: weddings
+          label: Bodas
+          field: category
+          eq: weddings
+        - name: portraits
+          label: Retratos
+          field: category
+          eq: portraits
+        - name: notes
+          label: Notas (texto)
+          field: layout
+          eq: note
+    view_groups:
+      groups:
+        - name: category
+          label: Categoría
+          field: category
+        - name: year
+          label: Año
+          field: date
+          pattern: '\d{4}'
+    fields:
+      - name: title
+        label: Título
+        widget: string
+        hint: 'Por ejemplo: “Elena & Marc”. También define la dirección de la página.'
+      - name: date
+        label: Fecha
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        default: '{{now}}'
+        hint: Fecha de la boda o de la sesión. Los álbumes se ordenan por esta fecha.
+      - name: updated
+        label: Fecha de actualización
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        required: false
+        hint: Opcional. Solo si se agregaron fotos o cambios importantes después de publicar.
+      - name: category
+        label: Categoría
+        widget: select
+        default: weddings
+        options:
+          - { label: Bodas, value: weddings }
+          - { label: Retratos, value: portraits }
+      - name: location
+        label: Lugar
+        widget: string
+        required: false
+        hint: 'Por ejemplo: “Cap de Formentor, Mallorca”.'
+      - name: layout
+        label: Diseño de la página
+        widget: select
+        default: story
+        options:
+          - { label: Historia (foto a pantalla completa), value: story }
+          - { label: Nota (texto), value: note }
+        hint: '“Historia” abre con la portada a pantalla completa; “Nota” es un artículo con más protagonismo del texto.'
+      - name: featured
+        label: Destacado en la portada
+        widget: boolean
+        default: false
+        required: false
+        hint: Aparece en la página de inicio. Se muestran hasta 3 álbumes destacados (los más recientes).
+      - name: draft
+        label: Borrador
+        widget: boolean
+        default: false
+        required: false
+        hint: Activado = no se publica en la web. Útil para preparar un álbum con calma.
+      - name: tags
+        label: Etiquetas
+        widget: select
+        multiple: true
+        required: false
+        default: []
+        options:
+          - { label: Destino (Destination), value: Destination }
+          - { label: Fuga romántica (Elopements), value: Elopements }
+          - { label: Íntima (Intimate), value: Intimate }
+        hint: Opcional. Cada etiqueta tiene su propia página en la web que agrupa los álbumes.
+      - name: cover
+        label: Portada
+        widget: object
+        hint: La foto principal del álbum. Se usa en el portfolio, en la portada y al compartir en redes.
+        fields:
+          - name: src
+            label: Foto de portada
+            widget: image
+            hint: Se convierte a WebP y se ajusta a 2400 px automáticamente al subirla.
+          - name: alt
+            label: Descripción de la foto
+            widget: string
+            required: false
+            hint: Texto alternativo para personas ciegas y buscadores. Describir lo que se ve.
+      - name: lede
+        label: Bajada
+        widget: text
+        hint: Una o dos frases que resumen el álbum. Se muestran bajo el título y en el listado.
+      - name: description
+        label: Descripción para Google (SEO)
+        widget: text
+        required: false
+        hint: Opcional. Texto corto (unos 150 caracteres) para buscadores. Si queda vacío, se usa la bajada.
+      - name: blocks
+        label: Contenido del álbum
+        label_singular: bloque
+        widget: list
+        required: false
+        collapsed: true
+        typeKey: type
+        hint: >-
+          Armá la página combinando bloques: texto, títulos, fotos sueltas, citas y
+          galerías. Se pueden reordenar arrastrándolos.
+        types:
+          - name: text
+            label: Texto
+            summary: '¶ {{body | truncate(80)}}'
+            fields:
+              - name: body
+                label: Texto
+                widget: markdown
+                buttons: [bold, italic, link]
+                hint: Un párrafo por línea en blanco. Se admite negrita, cursiva y enlaces.
+          - name: heading
+            label: Título de sección
+            summary: '§ {{text}}'
+            fields:
+              - name: text
+                label: Título
+                widget: string
+          - name: image
+            label: Foto
+            summary: '🖼 {{alt | truncate(70)}} ({{size}})'
+            fields:
+              - name: src
+                label: Foto
+                widget: image
+              - name: alt
+                label: Descripción de la foto
+                widget: string
+                required: false
+                hint: Texto alternativo (accesibilidad y buscadores).
+              - name: caption
+                label: Epígrafe
+                widget: string
+                required: false
+                hint: Opcional. Texto que se muestra debajo de la foto.
+              - name: credit
+                label: Crédito
+                widget: string
+                required: false
+                hint: Opcional. Por ejemplo, el nombre de un segundo fotógrafo.
+              - name: size
+                label: Tamaño
+                widget: select
+                default: wide
+                options:
+                  - { label: Normal (ancho del texto), value: regular }
+                  - { label: Ancha (más ancha que el texto), value: wide }
+                  - { label: Pantalla completa (de borde a borde), value: full }
+          - name: quote
+            label: Cita
+            summary: '“{{text | truncate(70)}}” {{author}}'
+            fields:
+              - name: text
+                label: Cita
+                widget: text
+              - name: author
+                label: Autor/a
+                widget: string
+                required: false
+                hint: Opcional. Por ejemplo, “Elena”.
+              - name: style
+                label: Estilo
+                widget: select
+                default: default
+                options:
+                  - { label: Estándar, value: default }
+                  - { label: Alternativo, value: alt }
+          - name: gallery
+            label: Galería de fotos
+            summary: '▦ Galería {{caption}}'
+            fields:
+              - name: caption
+                label: Epígrafe de la galería
+                widget: string
+                required: false
+                hint: Opcional. Texto que se muestra debajo de la galería.
+              - name: images
+                label: Fotos
+                label_singular: foto
+                widget: list
+                min: 1
+                collapsed: true
+                summary: '{{alt | truncate(70)}}'
+                thumbnail: src
+                hint: >-
+                  Las fotos se acomodan solas en filas, sin recortes. El orden de la
+                  lista es el orden en la web (arrastrar para reordenar). Tip: subí
+                  muchas fotos juntas desde “Recursos” y después elegilas acá.
+                fields:
+                  - name: src
+                    label: Foto
+                    widget: image
+                  - name: alt
+                    label: Descripción de la foto
+                    widget: string
+                    required: false
+                    hint: Texto alternativo (accesibilidad y buscadores).
+                  - name: caption
+                    label: Epígrafe
+                    widget: string
+                    required: false
+                  - name: credit
+                    label: Crédito
+                    widget: string
+                    required: false
+
+  - divider: true
+
+  # ───────────────────────────── PÁGINAS ─────────────────────────────
+  - name: pages
+    label: Páginas
+    label_singular: Página
+    icon: web
+    description: Textos e imágenes de las páginas fijas del sitio.
+    files:
+      # ── Inicio ──
+      - name: home
+        label: Inicio
+        icon: home
+        file: src/content/pages/home.yml
+        fields:
+          - &seo
+            name: seo
+            label: SEO (Google y redes)
+            widget: object
+            collapsed: true
+            hint: Título y descripción que se muestran en Google y al compartir el enlace.
+            fields:
+              - name: title
+                label: Título para Google
+                widget: string
+                required: false
+              - name: description
+                label: Descripción para Google
+                widget: text
+                required: false
+                hint: Unos 150 caracteres.
+          - name: heading
+            label: Título principal (oculto)
+            widget: string
+            required: false
+            hint: Título de la página para buscadores y lectores de pantalla.
+          - name: studio
+            label: Bloque “El estudio”
+            widget: object
+            collapsed: auto
+            fields:
+              - name: image
+                label: Foto
+                widget: image
+                required: false
+              - name: imageAlt
+                label: Descripción de la foto
+                widget: string
+                required: false
+              - name: title
+                label: Título
+                widget: string
+                required: false
+              - name: text
+                label: Texto
+                widget: text
+                required: false
+              - &buttonLabel
+                name: buttonLabel
+                label: Texto del botón
+                widget: string
+                required: false
+              - &buttonLink
+                name: buttonLink
+                label: Enlace del botón
+                widget: string
+                required: false
+                hint: 'Una página del sitio (por ejemplo /contact/) o una dirección completa (https://…).'
+              - name: figures
+                label: Cifras
+                label_singular: cifra
+                widget: list
+                required: false
+                summary: '{{label}}: {{value}}'
+                hint: 'Pequeños datos destacados. Escribir {stories} en el valor para mostrar la cantidad de álbumes, que se calcula sola.'
+                fields:
+                  - name: label
+                    label: Etiqueta
+                    widget: string
+                    required: false
+                  - name: value
+                    label: Valor
+                    widget: string
+                    required: false
+          - name: testimonials
+            label: Testimonios
+            widget: object
+            collapsed: auto
+            fields:
+              - name: title
+                label: Título de la sección
+                widget: string
+                required: false
+              - name: items
+                label: Testimonios
+                label_singular: testimonio
+                widget: list
+                required: false
+                collapsed: true
+                summary: '{{names}} — {{quote | truncate(60)}}'
+                thumbnail: image
+                fields:
+                  - name: quote
+                    label: Testimonio
+                    widget: text
+                    required: false
+                  - name: names
+                    label: Nombres
+                    widget: string
+                    required: false
+                    hint: 'Por ejemplo: “Elena & Marc”.'
+                  - name: category
+                    label: Tipo de trabajo
+                    widget: string
+                    required: false
+                    hint: 'Por ejemplo: “Weddings” o “Portraits”.'
+                  - name: context
+                    label: Contexto
+                    widget: string
+                    required: false
+                    hint: 'Lugar o descripción breve, por ejemplo “Cap de Formentor, Mallorca”.'
+                  - name: image
+                    label: Foto
+                    widget: image
+                    required: false
+                  - name: imageAlt
+                    label: Descripción de la foto
+                    widget: string
+                    required: false
+          - &cta
+            name: cta
+            label: Llamado a la acción (final de página)
+            widget: object
+            collapsed: auto
+            fields:
+              - name: title
+                label: Título
+                widget: string
+                required: false
+              - name: text
+                label: Texto
+                widget: text
+                required: false
+              - *buttonLabel
+              - *buttonLink
+
+      # ── Estudio ──
+      - name: studio
+        label: Estudio (Sobre mí)
+        icon: person
+        file: src/content/pages/studio.yml
+        preview_path: studio/
+        fields:
+          - *seo
+          - name: title
+            label: Título
+            widget: string
+            required: false
+          - name: lede
+            label: Bajada
+            widget: text
+            required: false
+          - name: image
+            label: Foto
+            widget: image
+            required: false
+          - name: imageAlt
+            label: Descripción de la foto
+            widget: string
+            required: false
+          - &pageBody
+            name: body
+            label: Texto de la página
+            widget: markdown
+            required: false
+            buttons: [bold, italic, link, heading-two, heading-three, bulleted-list, numbered-list, quote]
+            hint: 'Se pueden usar {email}, {phone} y {name}: se reemplazan solos por el email, teléfono y nombre de Configuración.'
+
+      # ── Precios ──
+      - name: pricing
+        label: Precios
+        icon: sell
+        file: src/content/pages/pricing.yml
+        preview_path: pricing/
+        fields:
+          - *seo
+          - name: title
+            label: Título
+            widget: string
+            required: false
+          - name: lede
+            label: Bajada
+            widget: text
+            required: false
+          - name: packages
+            label: Paquetes
+            label_singular: paquete
+            widget: list
+            required: false
+            collapsed: true
+            summary: "{{name}} — {{priceNote}} {{price}}{{featured | ternary(' ★', '')}}"
+            fields:
+              - name: name
+                label: Nombre del paquete
+                widget: string
+                required: false
+              - name: priceNote
+                label: Texto junto al precio
+                widget: string
+                required: false
+                hint: 'Por ejemplo: “desde” o “por sesión”.'
+              - name: price
+                label: Precio
+                widget: string
+                required: false
+                hint: 'Tal como se muestra, con moneda: “€3,200”, “USD 1.500”.'
+              - name: summary
+                label: Resumen
+                widget: text
+                required: false
+              - name: featured
+                label: Destacado
+                widget: boolean
+                default: false
+                required: false
+                hint: Resalta este paquete visualmente.
+              - name: badge
+                label: Etiqueta destacada
+                widget: string
+                required: false
+                hint: 'Opcional. Por ejemplo: “El más elegido”.'
+              - name: includesTitle
+                label: Título de la lista de inclusiones
+                widget: string
+                required: false
+              - name: includes
+                label: Qué incluye
+                label_singular: ítem
+                widget: list
+                required: false
+                hint: Un ítem por línea.
+              - *buttonLabel
+              - *buttonLink
+          - name: note
+            label: Nota final
+            widget: text
+            required: false
+
+      # ── Contacto ──
+      - name: contact
+        label: Contacto
+        icon: mail
+        file: src/content/pages/contact.yml
+        preview_path: contact/
+        fields:
+          - *seo
+          - name: title
+            label: Título
+            widget: string
+            required: false
+          - name: lede
+            label: Bajada
+            widget: text
+            required: false
+          - name: emailHeading
+            label: Título sobre el email
+            widget: string
+            required: false
+          - name: sections
+            label: Secciones de texto
+            label_singular: sección
+            widget: list
+            required: false
+            summary: '{{heading}}'
+            fields:
+              - name: heading
+                label: Título
+                widget: string
+                required: false
+              - name: text
+                label: Texto
+                widget: text
+                required: false
+          - name: basedLabel
+            label: Etiqueta “Ubicación”
+            widget: string
+            required: false
+          - name: phoneLabel
+            label: Etiqueta “Teléfono”
+            widget: string
+            required: false
+          - name: followLabel
+            label: Etiqueta “Redes”
+            widget: string
+            required: false
+          - name: form
+            label: Formulario de consulta
+            widget: object
+            collapsed: auto
+            hint: 'Textos del formulario. La dirección a la que se envía se configura en Configuración → Formularios.'
+            fields:
+              - { name: nameLabel, label: Campo “Nombres”, widget: string, required: false }
+              - { name: emailLabel, label: Campo “Email”, widget: string, required: false }
+              - { name: dateLabel, label: Campo “Fecha”, widget: string, required: false }
+              - { name: placeLabel, label: Campo “Lugar”, widget: string, required: false }
+              - { name: messageLabel, label: Campo “Mensaje”, widget: string, required: false }
+              - { name: buttonLabel, label: Texto del botón de envío, widget: string, required: false }
+
+      # ── Privacidad ──
+      - name: privacy
+        label: Privacidad
+        icon: policy
+        file: src/content/pages/privacy.yml
+        preview_path: privacy/
+        fields:
+          - *seo
+          - name: title
+            label: Título
+            widget: string
+            required: false
+          - name: lede
+            label: Bajada
+            widget: text
+            required: false
+          - *pageBody
+
+  # ─────────────────────────── CONFIGURACIÓN ───────────────────────────
+  - name: settings
+    label: Configuración
+    label_singular: Configuración
+    icon: settings
+    description: Datos generales, redes, menú, pie de página y formularios.
+    files:
+      - name: site
+        label: Datos del sitio
+        icon: tune
+        file: src/content/settings/site.yml
+        fields:
+          - name: name
+            label: Nombre del estudio
+            widget: string
+            required: false
+            hint: Se muestra en la cabecera, en la pestaña del navegador y en buscadores.
+          - name: tagline
+            label: Lema
+            widget: string
+            required: false
+          - name: photographer
+            label: Nombre del fotógrafo/a
+            widget: string
+            required: false
+          - name: email
+            label: Email de contacto
+            widget: string
+            type: email
+            required: false
+          - name: phone
+            label: Teléfono
+            widget: string
+            required: false
+            hint: Opcional. Con código de país, por ejemplo +54 9 11 1234-5678.
+          - name: location
+            label: Ubicación
+            widget: string
+            required: false
+            hint: 'Por ejemplo: “Buenos Aires, Argentina”.'
+          - name: locationNote
+            label: Nota de ubicación
+            widget: string
+            required: false
+            hint: 'Por ejemplo: “Viajo a todo el país”.'
+          - name: logo
+            label: Logo
+            widget: image
+            required: false
+            hint: Opcional. Si queda vacío se muestra el nombre del estudio como texto.
+          - name: seo
+            label: SEO general
+            widget: object
+            collapsed: true
+            fields:
+              - name: description
+                label: Descripción del sitio
+                widget: text
+                required: false
+                hint: Texto por defecto para Google (unos 150 caracteres).
+              - name: ogImage
+                label: Imagen para compartir en redes
+                widget: image
+                required: false
+                hint: Se ve al compartir el enlace en WhatsApp, Facebook, etc. Ideal 1200 × 630 px.
+              - name: ogImageAlt
+                label: Descripción de esa imagen
+                widget: string
+                required: false
+          - name: socials
+            label: Redes sociales
+            label_singular: red
+            widget: list
+            required: false
+            summary: '{{label}} ({{platform}})'
+            fields:
+              - name: platform
+                label: Red
+                widget: select
+                default: website
+                options:
+                  - { label: Instagram, value: instagram }
+                  - { label: Pinterest, value: pinterest }
+                  - { label: Email, value: email }
+                  - { label: Teléfono, value: phone }
+                  - { label: Facebook, value: facebook }
+                  - { label: TikTok, value: tiktok }
+                  - { label: YouTube, value: youtube }
+                  - { label: Vimeo, value: vimeo }
+                  - { label: WhatsApp, value: whatsapp }
+                  - { label: LinkedIn, value: linkedin }
+                  - { label: Threads, value: threads }
+                  - { label: X (Twitter), value: x }
+                  - { label: Behance, value: behance }
+                  - { label: Sitio web, value: website }
+              - name: label
+                label: Texto visible
+                widget: string
+                required: false
+              - name: url
+                label: Enlace
+                widget: string
+                required: false
+                hint: Dirección completa (https://…). Para Email y Teléfono puede quedar vacío y se usan los datos de arriba.
+          - name: nav
+            label: Menú
+            widget: object
+            collapsed: auto
+            fields:
+              - name: primary
+                label: Menú principal
+                label_singular: enlace
+                widget: list
+                required: false
+                summary: '{{label}} → {{href}}'
+                fields:
+                  - name: label
+                    label: Texto
+                    widget: string
+                    required: false
+                  - name: href
+                    label: Enlace
+                    widget: string
+                    required: false
+                    hint: 'Una página del sitio (por ejemplo /work/) o una dirección completa.'
+              - name: secondaryHeading
+                label: Título del menú secundario
+                widget: string
+                required: false
+              - name: secondary
+                label: Menú secundario
+                label_singular: enlace
+                widget: list
+                required: false
+                summary: '{{label}} → {{href}}'
+                fields:
+                  - { name: label, label: Texto, widget: string, required: false }
+                  - { name: href, label: Enlace, widget: string, required: false }
+          - name: footer
+            label: Pie de página
+            widget: object
+            collapsed: auto
+            fields:
+              - name: signupTitle
+                label: Título del boletín
+                widget: string
+                required: false
+              - name: signupText
+                label: Texto del boletín
+                widget: string
+                required: false
+              - name: signupPlaceholder
+                label: Texto de ejemplo en el campo de email
+                widget: string
+                required: false
+              - name: signupButton
+                label: Botón del boletín
+                widget: string
+                required: false
+              - name: description
+                label: Descripción
+                widget: text
+                required: false
+              - name: columns
+                label: Columnas de enlaces
+                label_singular: columna
+                widget: list
+                required: false
+                collapsed: true
+                summary: '{{heading}}'
+                fields:
+                  - name: heading
+                    label: Título de la columna
+                    widget: string
+                    required: false
+                  - name: links
+                    label: Enlaces
+                    label_singular: enlace
+                    widget: list
+                    required: false
+                    summary: '{{label}} → {{href}}'
+                    fields:
+                      - { name: label, label: Texto, widget: string, required: false }
+                      - { name: href, label: Enlace, widget: string, required: false }
+              - name: copyright
+                label: Copyright
+                widget: string
+                required: false
+                hint: 'Por ejemplo: “© 2026 Moments. Todos los derechos reservados.”'
+              - name: credit
+                label: Crédito
+                widget: string
+                required: false
+          - name: forms
+            label: Formularios
+            widget: object
+            collapsed: auto
+            hint: 'URL del proveedor de formularios (por ejemplo Formspree: https://formspree.io/f/xxxx). Si quedan vacías, los formularios quedan desactivados.'
+            fields:
+              - name: enquiryAction
+                label: URL del formulario de consulta
+                widget: string
+                type: url
+                required: false
+              - name: newsletterAction
+                label: URL del formulario del boletín
+                widget: string
+                type: url
+                required: false
+
+# Fotos que ya trae el tema (solo lectura: se pueden ver y reutilizar, no borrar).
+asset_collections:
+  - name: theme_photos
+    label: Fotos originales del tema
+    icon: photo_camera
+    media_folder: public/_astro
+    public_folder: /_astro
+    readonly: true

@@ -33,6 +33,13 @@ npm run preview
 
 Esta es una reconstrucción de la **versión pública compilada**, dentro de un proyecto Astro 7 funcional. No es el código fuente privado del tema comercial: no contiene sus colecciones MDX, componentes originales ni configuraciones privadas. Los estilos publicados proceden de su compilación Tailwind; no se añade otra compilación que pudiera alterar la apariencia.
 
+## Panel de administración
+
+El sitio incluye un panel de edición en **`/admin/`** ([Sveltia CMS](https://sveltiacms.app)) para gestionar álbumes y galerías de fotos, páginas (Inicio, Estudio, Precios, Contacto, Privacidad) y la configuración general, sin tocar código. Las fotos subidas se convierten solas a WebP y se ajustan a 2400 px.
+
+- Probar en local: `npm run dev` y abrir http://127.0.0.1:4321/admin/ en Chrome o Edge → “Trabajar con un repositorio local”.
+- Guía completa (uso, creación de álbumes, inicio de sesión en producción con Cloudflare y limitaciones): [docs/CMS.md](docs/CMS.md).
+
 ## Formularios
 
 La demo original tiene desactivados los formularios de contacto y newsletter. La réplica conserva ese comportamiento. Para activarlos, completar `enquiryAction` y `newsletterAction` con los endpoints reales del proveedor elegido en `src/config/site.ts`; se habilitan los botones al reconstruir. No se simulan envíos ni suscripciones.
