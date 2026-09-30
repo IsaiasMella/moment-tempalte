@@ -359,6 +359,7 @@ collections:
         label: Inicio
         icon: home
         file: src/content/pages/home.yml
+        preview_path: /
         fields:
           - &seo
             name: seo
@@ -684,6 +685,7 @@ collections:
         label: Datos del sitio
         icon: tune
         file: src/content/settings/site.yml
+        preview_path: /
         fields:
           - name: name
             label: Nombre del estudio
