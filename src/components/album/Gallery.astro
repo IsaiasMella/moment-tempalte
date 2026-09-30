@@ -8,18 +8,20 @@
  */
 import LightboxFrame from './LightboxFrame.astro';
 import ResponsiveImage from '../ResponsiveImage.astro';
-import type { AlbumImage } from '../../lib/schemas';
+import type { PhotoProps } from '../../lib/schemas';
 import { WIDTHS } from '../../lib/images';
 
 interface Props {
-  images: AlbumImage[];
+  images: PhotoProps[];
   caption?: string;
+  /** Lightbox group, scoping the arrows to this gallery (default "story"). */
+  group?: string;
 }
 
-const { images, caption } = Astro.props;
+const { images, caption, group } = Astro.props;
 ---
 <figure class="gallery" aria-label="Gallery"><div class="gallery-rows" data-gallery>{images.map((image, index) => (
-  <LightboxFrame image={image} class="gallery-frame" label={`Enlarge photograph ${index + 1} of ${images.length}`}><ResponsiveImage src={image.src} alt={image.alt} widths={WIDTHS.gallery} sizes="(min-width: 64rem) 34vw, (min-width: 40rem) 48vw, 94vw" autosize /></LightboxFrame>
+  <LightboxFrame image={image} class="gallery-frame" label={`Enlarge photograph ${index + 1} of ${images.length}`} group={group}><ResponsiveImage src={image.src} alt={image.alt} widths={WIDTHS.gallery} sizes="(min-width: 64rem) 34vw, (min-width: 40rem) 48vw, 94vw" autosize /></LightboxFrame>
 ))}</div>{caption && <figcaption class="gallery-caption">{caption}</figcaption>}</figure>
 
 <script>

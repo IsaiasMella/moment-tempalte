@@ -1,14 +1,18 @@
 /**
  * Vista previa de álbumes con el diseño real del sitio.
- * Reproduce el marcado de src/lib/albums/render.ts (mismas clases) y carga la hoja de estilos
- * publicada, así el panel muestra portada, tipografías, citas y galerías como en la web.
+ * Reproduce el marcado de los componentes del álbum (mismas clases):
+ *   src/components/album/AlbumHero.astro, Blocks.astro, Figure.astro, Gallery.astro, Pullquote.astro
+ * y carga la hoja de estilos compilada del sitio, cuya URL (con hash) le pasa
+ * src/pages/admin/index.astro en el atributo data-styles de este <script>.
+ * Si cambiás el marcado de esos componentes, actualizá también render() acá.
  */
 (() => {
+  const styles = document.currentScript?.dataset.styles;
   const CMS = window.CMS;
   if (!CMS) return;
   const h = CMS.React.createElement;
 
-  CMS.registerPreviewStyle('/_astro/PageLayout.cuBU2wuV.css');
+  if (styles) CMS.registerPreviewStyle(styles);
   CMS.registerPreviewStyle(`
     body { margin: 0; }
     .preview-empty { padding: 4rem 1.5rem; text-align: center; opacity: .6; font-family: system-ui, sans-serif; }

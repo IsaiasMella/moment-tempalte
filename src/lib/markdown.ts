@@ -8,11 +8,11 @@
  */
 
 /** Escapes text for use inside HTML. */
-export const esc = (value: string): string =>
+const esc = (value: string): string =>
   String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 /** Escapes text for use inside a double-quoted HTML attribute. */
-export const escAttr = (value: string): string => esc(value).replaceAll('"', '&quot;');
+const escAttr = (value: string): string => esc(value).replaceAll('"', '&quot;');
 
 
 function emphasis(text: string): string {

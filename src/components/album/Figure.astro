@@ -3,16 +3,20 @@
  * An "image" block: one photograph at reading width (regular), wider than the
  * text (wide) or edge to edge (full), opening in the lightbox.
  *
+ * Used by album pages (Blocks.astro) and the styleguide.
+ *
  * React/Next.js equivalent: a <Figure size="wide" /> component in an MDX/blocks renderer.
  */
 import LightboxFrame from './LightboxFrame.astro';
 import ResponsiveImage from '../ResponsiveImage.astro';
-import type { AlbumImage } from '../../lib/schemas';
+import type { PhotoProps } from '../../lib/schemas';
 import { WIDTHS } from '../../lib/images';
 
 interface Props {
-  image: AlbumImage;
+  image: PhotoProps;
   size?: 'regular' | 'wide' | 'full';
+  /** Lightbox group: photos sharing it are browsed together (default "story"). */
+  group?: string;
 }
 
 const VARIANTS = {
@@ -21,7 +25,7 @@ const VARIANTS = {
   full: { className: 'card card-full', sizes: '100vw', widths: WIDTHS.full },
 } as const;
 
-const { image, size = 'wide' } = Astro.props;
+const { image, size = 'wide', group } = Astro.props;
 const variant = VARIANTS[size];
 ---
-<figure class={variant.className}><LightboxFrame image={image} class="figure-frame" label="Enlarge photograph"><ResponsiveImage src={image.src} alt={image.alt} widths={variant.widths} sizes={variant.sizes} autosize /></LightboxFrame>{image.caption && <figcaption class="figure-caption">{image.caption}</figcaption>}</figure>
+<figure class={variant.className}><LightboxFrame image={image} class="figure-frame" label="Enlarge photograph" group={group}><ResponsiveImage src={image.src} alt={image.alt} widths={variant.widths} sizes={variant.sizes} autosize /></LightboxFrame>{image.caption && <figcaption class="figure-caption">{image.caption}</figcaption>}</figure>

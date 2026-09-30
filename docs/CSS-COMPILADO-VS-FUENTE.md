@@ -3,9 +3,9 @@
 ## Qué hay en cada lugar
 | Archivo | Qué es |
 |---|---|
-| `public/_astro/PageLayout.cuBU2wuV.css` | El CSS **compilado** tal como se publicó: 2 líneas, minificado, con Tailwind ya generado. |
-| `docs/estudio/compilado-formateado.css` | El mismo archivo, solo con saltos de línea para poder leerlo. Mismo contenido, sin organización. |
-| `src/styles/` | El CSS **fuente reconstruido**: así lo tendría el autor del tema. |
+| `docs/estudio/compilado-formateado.css` | Copia de estudio del CSS **compilado** que publicaba la demo original (un solo archivo minificado, con Tailwind ya generado), solo con saltos de línea para poder leerlo. Sin organización. El archivo compilado original ya no forma parte del sitio. |
+| `src/styles/` | El CSS **fuente reconstruido**: así lo tendría el autor del tema. Es lo único que usa el sitio. |
+| `dist/_astro/global.<hash>.css` | Lo que genera `npm run build` a partir de `src/styles/` (también lo usa la vista previa del CMS). |
 
 ## Cómo está organizado `src/styles/`
 - `global.css`: punto de entrada. Importa Tailwind y todo lo demás **en orden**.
@@ -23,7 +23,7 @@
 El primer intento agrupó las reglas por componente **cambiando su orden**, y el sitio se rompió: galerías más altas, tarjetas desplazadas. En CSS, cuando dos reglas tienen la misma prioridad, gana la que está más abajo. Por eso `global.css` importa los archivos exactamente en el orden original.
 
 ## Verificación
-Se compararon con capturas 12 páginas, en escritorio y celular, en modo claro y oscuro: CSS compilado original contra CSS generado desde `src/styles/`. Son **idénticas**. Las únicas diferencias están en páginas con carrusel o grillas animadas, y esas páginas también difieren al comparar el original contra sí mismo.
+Se compararon con capturas 12 páginas, en escritorio y celular, en modo claro y oscuro: el CSS compilado original contra el generado desde `src/styles/`. Son **idénticas**. Las únicas diferencias están en páginas con carrusel o grillas animadas, y esas páginas también difieren al comparar el original contra sí mismo.
 
 ## Señales de un template bien o mal hecho
 - ✅ Colores y tipografías en variables (`--accent`, `--font-display`), no repetidos a mano.

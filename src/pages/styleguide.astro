@@ -16,57 +16,26 @@ import Bookmark from '../components/blocks/Bookmark.astro';
 import Callout from '../components/blocks/Callout.astro';
 import CtaCard from '../components/blocks/CtaCard.astro';
 import Embed from '../components/blocks/Embed.astro';
-import Figure from '../components/blocks/Figure.astro';
+import Figure from '../components/album/Figure.astro';
 import FileCard from '../components/blocks/FileCard.astro';
-import Gallery from '../components/blocks/Gallery.astro';
+import Gallery from '../components/album/Gallery.astro';
 import HeaderCard from '../components/blocks/HeaderCard.astro';
 import ProductCard from '../components/blocks/ProductCard.astro';
 import SignupCard from '../components/blocks/SignupCard.astro';
 import Toggle from '../components/blocks/Toggle.astro';
-import type { Photo } from '../components/blocks/types';
+import type { PhotoProps } from '../lib/schemas';
 
-/** Demo photographs; their width variants are pre-rendered in public/_astro/. */
-const regular: Photo = {
-  src: '/_astro/g2.CHbHPbCS_Z2cdS9B.webp',
-  srcset: '/_astro/g2.CHbHPbCS_Z1pY3bl.webp 600w, /_astro/g2.CHbHPbCS_WkvYB.webp 900w, /_astro/g2.CHbHPbCS_Z2cdS9B.webp 1067w',
-  lightboxSrcset: '/_astro/g2.CHbHPbCS_Z2cdS9B.webp 1067w',
-  alt: 'Bride in a lace gown at sunset, the groom behind her.',
-  width: 1067,
-  height: 1600,
-};
-const wide: Photo = {
-  src: '/_astro/g4.DTSxkYud_ZdUxsy.webp',
-  srcset: '/_astro/g4.DTSxkYud_Z1XS5sp.webp 600w, /_astro/g4.DTSxkYud_1C7Dlo.webp 900w, /_astro/g4.DTSxkYud_1LSzJW.webp 1200w, /_astro/g4.DTSxkYud_ZdUxsy.webp 1600w',
-  lightboxSrcset: '/_astro/g4.DTSxkYud_1LSzJW.webp 1200w, /_astro/g4.DTSxkYud_ZdUxsy.webp 1600w',
-  alt: 'A couple on a beach at sunset.',
-  width: 1600,
-  height: 1068,
-};
-const full: Photo = {
-  src: '/_astro/cover.DFSdE5Xa_Z1WHDYr.webp',
-  srcset: '/_astro/cover.DFSdE5Xa_Z24rKeI.webp 600w, /_astro/cover.DFSdE5Xa_2tyKmf.webp 900w, /_astro/cover.DFSdE5Xa_ZAgtSb.webp 1200w, /_astro/cover.DFSdE5Xa_ZWfww1.webp 1600w, /_astro/cover.DFSdE5Xa_1c27qx.webp 2000w, /_astro/cover.DFSdE5Xa_Z1WHDYr.webp 2400w',
-  lightboxSrcset: '/_astro/cover.DFSdE5Xa_ZAgtSb.webp 1200w, /_astro/cover.DFSdE5Xa_ZWfww1.webp 1600w, /_astro/cover.DFSdE5Xa_Z1WHDYr.webp 2400w',
-  alt: 'Bride and groom embracing beneath sunlit stone arches.',
-  width: 2400,
-  height: 1600,
-};
-
-/** Builds a gallery photo from its file stem, available widths and size. */
-const photo = (stem: string, widths: number[], lightboxWidths: number[], alt: string, width: number, height: number, ids: Record<number, string>): Photo => ({
-  src: `/_astro/${stem}_${ids[width]}.webp`,
-  srcset: widths.map((w) => `/_astro/${stem}_${ids[w]}.webp ${w}w`).join(', '),
-  lightboxSrcset: lightboxWidths.map((w) => `/_astro/${stem}_${ids[w]}.webp ${w}w`).join(', '),
-  alt,
-  width,
-  height,
-});
-const gallery: Photo[] = [
-  photo('g1.DH3fJqZv', [400, 600, 900, 1200, 1333], [1200, 1333], 'A long table laid for dinner on a terrace.', 1333, 2000, { 400: 'EARsO', 600: '2aUpmx', 900: 'ZvW9gr', 1200: 'XCEwG', 1333: 'Z22M28l' }),
-  photo('g2.JRZGeFBg', [400, 600, 900, 1067], [1067], 'Place settings and folded linen.', 1067, 1600, { 400: '2oMFfm', 600: 'Z1a4UEQ', 900: '1deDv6', 1067: 'MzM1H' }),
-  photo('g3.Dy4m3vq6', [400, 600, 900, 1200, 1600], [1200, 1600], 'Guests raising glasses at dusk.', 1600, 1068, { 400: 'ZztYoE', 600: '2bgC08', 900: 'H5d00', 1200: 'Z1gl51z', 1600: '1N1UyQ' }),
-  photo('g4.BVD-flW-', [400, 600, 900, 1067], [1067], 'Candles down the centre of a table.', 1067, 1600, { 400: 'ZnN5tK', 600: '17vroX', 900: 'Z1zm7e1', 1067: 'xhu12' }),
-  photo('g5.D54N9qZp', [400, 600, 900, 1200, 1600], [1200, 1600], 'A cake on a side table.', 1600, 1067, { 400: '294aOj', 600: 'ZamlzP', 900: 'SBliM', 1200: 'Zud0i7', 1600: 'Z2v28vC' }),
-  photo('g6.EBeR-1kG', [400, 600, 900, 1200, 1600], [1200, 1600], 'The terrace after dark, lit by bulbs.', 1600, 1197, { 400: '2uKjwy', 600: '8Neyv', 900: 'Z1q4Fqi', 1200: 'Z11gvxX', 1600: 'ZS2KNB' }),
+/** Demo photographs shipped in public/_astro/ (their width variants sit next to them). */
+const regular: PhotoProps = { src: '/_astro/g2.CHbHPbCS_Z2cdS9B.webp', alt: 'Bride in a lace gown at sunset, the groom behind her.', caption: 'Regular width. Click it to open the lightbox.' };
+const wide: PhotoProps = { src: '/_astro/g4.DTSxkYud_ZdUxsy.webp', alt: 'A couple on a beach at sunset.', caption: 'Wide.' };
+const full: PhotoProps = { src: '/_astro/cover.DFSdE5Xa_Z1WHDYr.webp', alt: 'Bride and groom embracing beneath sunlit stone arches.', caption: 'Full width.' };
+const gallery: PhotoProps[] = [
+  { src: '/_astro/g1.DH3fJqZv_Z22M28l.webp', alt: 'A long table laid for dinner on a terrace.' },
+  { src: '/_astro/g2.JRZGeFBg_MzM1H.webp', alt: 'Place settings and folded linen.' },
+  { src: '/_astro/g3.Dy4m3vq6_1N1UyQ.webp', alt: 'Guests raising glasses at dusk.' },
+  { src: '/_astro/g4.BVD-flW-_xhu12.webp', alt: 'Candles down the centre of a table.' },
+  { src: '/_astro/g5.D54N9qZp_Z2v28vC.webp', alt: 'A cake on a side table.' },
+  { src: '/_astro/g6.EBeR-1kG_ZS2KNB.webp', alt: 'The terrace after dark, lit by bulbs.' },
 ];
 ---
 <BaseLayout title="Styleguide" description="Every element the theme styles, in one place." noindex>
@@ -83,13 +52,13 @@ const gallery: Photo[] = [
     <h2>Tables</h2><p>A table scrolls inside its own frame when a narrow screen cannot hold it, so it never drags the page sideways.</p><table><thead><tr><th>Collection</th><th>Stories</th><th>Typical length</th></tr></thead><tbody><tr><td>Weddings</td><td>14</td><td>A full day</td></tr><tr><td>Portraits</td><td>4</td><td>Two hours</td></tr><tr><td>Studio notes</td><td>2</td><td>Half a day</td></tr></tbody></table>
 
     <h2>Photographs</h2><p>A regular figure sits at the width of the reading column.</p>
-    <Figure photo={regular} group="styleguide" caption="Regular width. Click it to open the lightbox." sizes="(min-width: 48rem) 608px, 94vw" />
+    <Figure image={regular} size="regular" group="styleguide" />
     <p>A wide figure breaks out of the column, and a full one runs to the window edge.</p>
-    <Figure photo={wide} size="wide" group="styleguide" caption="Wide." sizes="(min-width: 64rem) 1100px, 94vw" />
-    <Figure photo={full} size="full" group="styleguide" caption="Full width." sizes="100vw" />
+    <Figure image={wide} size="wide" group="styleguide" />
+    <Figure image={full} size="full" group="styleguide" />
 
     <h2>Galleries</h2><p>A gallery packs its frames into justified rows by their own proportions, so no photograph is cropped to fit a grid. Every row runs the full window at one height. Clicking a frame opens the lightbox scoped to that gallery, with arrows, the keyboard and swipe.</p>
-    <Gallery photos={gallery} group="styleguide-gallery" caption="Six frames, packed into rows. Resize the window and the rows repack." />
+    <Gallery images={gallery} group="styleguide-gallery" caption="Six frames, packed into rows. Resize the window and the rows repack." />
 
     <h2>Callouts</h2>
     <Callout color="grey" emoji="📷"><p>Grey is the quiet one, for a note that only needs separating from the prose.</p></Callout>

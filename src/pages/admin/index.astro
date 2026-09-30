@@ -1,5 +1,13 @@
 ---
-// Sveltia CMS panel. Lives in src/pages so the catch-all route does not shadow /admin/ in dev.
+/**
+ * Sveltia CMS panel (/admin/). The CMS reads its configuration from
+ * public/admin/config.yml; public/admin/preview.js draws the album preview.
+ *
+ * `?url` asks Vite for the URL of the site's compiled stylesheet (hashed in the
+ * build, e.g. /_astro/global.XXXX.css) without adding it to this page. It is
+ * passed to preview.js so the preview uses exactly the same CSS as the site.
+ */
+import siteStyles from '../../styles/global.css?url';
 ---
 <!doctype html>
 <html lang="es">
@@ -14,7 +22,7 @@
   <body>
     <!-- Sveltia CMS: https://sveltiacms.app · Guía: docs/CMS.md -->
     <script is:inline src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
-    <!-- Vista previa de álbumes con el diseño real. -->
-    <script is:inline src="/admin/preview.js"></script>
+    <!-- Vista previa de álbumes con el diseño real (data-styles = CSS compilado del sitio). -->
+    <script is:inline src="/admin/preview.js" data-styles={siteStyles}></script>
   </body>
 </html>

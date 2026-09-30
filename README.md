@@ -1,49 +1,50 @@
-# Moments · réplica local
+# Moments · tema Astro para fotografía de bodas
 
-Reproducción local de https://moments.xocoweb.workers.dev/, capturada el 29 de septiembre de 2026. Conserva el HTML publicado, CSS, JavaScript, fotografías, iconos y tipografías para mantener la máxima fidelidad visual. Incluye 34 páginas distintas, las 19 historias y 972 recursos locales. El inventario registra además cuatro variantes de URL sin barra final.
+Sitio estático para un fotógrafo de bodas y retratos, hecho con **Astro 7**: portada con foto a pantalla completa, muro de trabajos, álbumes con galerías que no recortan las fotos, páginas de Estudio, Precios, Contacto y Privacidad, modo claro/oscuro y un panel de edición (**Sveltia CMS**) en `/admin/`.
 
-## Abrir y trabajar
+Está pensado también para **estudiar**: cada página y componente tiene comentarios que explican qué hace y su equivalente en React/Next.js.
 
-Requiere Node.js 22.12 o posterior.
+## Requisitos
 
-```sh
-npm install
-npm run dev
-```
+- Node.js **22.12** o posterior.
+- Para el panel en modo local: Chrome o Edge de escritorio.
 
-Abrir http://localhost:4321. También se puede usar `INICIAR.cmd` en Windows. No abrir los HTML con doble clic: las rutas de imágenes y navegación necesitan el servidor local.
+## Comandos
 
 ```sh
-npm run build
-npm run verify
-npm run preview
+npm install        # una vez
+npm run dev        # sitio en http://127.0.0.1:4321 (y el panel en /admin/)
+npm run build      # genera dist/ (sitio estático listo para publicar)
+npm run verify     # revisa que todos los enlaces e imágenes internos de dist/ existan
+npm run preview    # sirve dist/ localmente
+npx astro check    # chequeo de tipos
 ```
 
-`dist/` contiene la web estática lista para un servidor estático. No necesita conexión a la web original para cargar páginas, fotografías, CSS, iconos o fuentes. Los enlaces a redes y los embeds externos de la guía de estilo mantienen su destino original.
+En Windows se puede hacer doble clic en `INICIAR.cmd` (instala si hace falta y arranca `npm run dev`).
 
-## Estructura y edición
+Antes de publicar, definir `SITE_URL` con el dominio final (por ejemplo `SITE_URL=https://mi-dominio.com npm run build`) para que canonical, Open Graph, sitemap y JSON-LD usen esa dirección.
 
-- `src/reference/`: HTML de cada página; editar aquí textos, imágenes y estructura de cada ruta.
-- `public/_astro/`: imágenes optimizadas y estilos publicados de la referencia.
-- `public/fonts/`: fuentes originales locales.
-- `src/pages/[...path].astro`: genera todas las rutas con Astro 7.
-- `src/lib/reference.ts`: lectura de páginas y adaptación de las URLs al dominio local o al dominio de publicación.
-- `src/config/site.ts`: configuración de proveedores de formularios.
-- `reference-manifest.json`: inventario de rutas y recursos, con errores de descarga si los hubiera.
+## Dónde editar
 
-Esta es una reconstrucción de la **versión pública compilada**, dentro de un proyecto Astro 7 funcional. No es el código fuente privado del tema comercial: no contiene sus colecciones MDX, componentes originales ni configuraciones privadas. Los estilos publicados proceden de su compilación Tailwind; no se añade otra compilación que pudiera alterar la apariencia.
+| Quiero cambiar… | Dónde |
+|---|---|
+| Álbumes, textos de páginas, menú, redes, formularios | Panel `/admin/`, o los archivos de `src/content/` |
+| Diseño de una página | `src/pages/*.astro` |
+| Una pieza reutilizable (portada, galería, tarjeta…) | `src/components/` |
+| Colores, tipografías, medidas | `src/styles/tokens.css` |
+| Estilos de un componente | `src/styles/components/*.css` |
+| Comportamiento en el navegador (menú, visor, carrusel) | `src/scripts/` |
+| Campos del panel | `public/admin/config.yml` + `src/lib/schemas.ts` (deben coincidir) |
 
-## Panel de administración
+**Formularios:** contacto y newsletter están desactivados hasta cargar la URL del proveedor (por ejemplo Formspree) en el panel: **Configuración → Formularios**.
 
-El sitio incluye un panel de edición en **`/admin/`** ([Sveltia CMS](https://sveltiacms.app)) para gestionar álbumes y galerías de fotos, páginas (Inicio, Estudio, Precios, Contacto, Privacidad) y la configuración general, sin tocar código. Las fotos subidas se convierten solas a WebP y se ajustan a 2400 px.
+## Documentación
 
-- Probar en local: `npm run dev` y abrir http://127.0.0.1:4321/admin/ en Chrome o Edge → “Trabajar con un repositorio local”.
-- Guía completa (uso, creación de álbumes, inicio de sesión en producción con Cloudflare y limitaciones): [docs/CMS.md](docs/CMS.md).
+- [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md): mapa de carpetas, cómo fluye el contenido, equivalencias con Next.js, orden de lectura, cómo agregar páginas.
+- [docs/ERRORES-COMUNES.md](docs/ERRORES-COMUNES.md): problemas típicos de templates y cómo los evita este proyecto.
+- [docs/CMS.md](docs/CMS.md): uso del panel, modo local y publicación con GitHub.
+- [docs/CSS-COMPILADO-VS-FUENTE.md](docs/CSS-COMPILADO-VS-FUENTE.md): cómo se organizó el CSS y por qué importa el orden.
 
-## Formularios
+## Créditos
 
-La demo original tiene desactivados los formularios de contacto y newsletter. La réplica conserva ese comportamiento. Para activarlos, completar `enquiryAction` y `newsletterAction` con los endpoints reales del proveedor elegido en `src/config/site.ts`; se habilitan los botones al reconstruir. No se simulan envíos ni suscripciones.
-
-## Publicación
-
-Definir `SITE_URL` con el dominio final antes de construir para actualizar canonical, Open Graph, JSON-LD y enlaces absolutos. Las fotografías y el diseño mantienen las atribuciones de la referencia; esta réplica no proporciona una licencia del tema ni de sus contenidos.
+Diseño basado en la demo pública de *Moments* (https://moments.xocoweb.workers.dev/). Las fotografías y el diseño mantienen las atribuciones de esa referencia; este proyecto no otorga una licencia del tema ni de sus contenidos.

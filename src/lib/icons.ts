@@ -1,6 +1,6 @@
 /**
  * Social icons (Bootstrap Icons 1.13.1, MIT) as raw SVG strings, byte-identical to
- * the ones shipped in the reference markup. Rendered by `src/components/Icon.astro`.
+ * the ones the theme uses. Rendered by `src/components/Icon.astro`.
  */
 import type { SocialPlatform } from './schemas';
 

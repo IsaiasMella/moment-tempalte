@@ -99,11 +99,11 @@ export function localFile(src: string): string | undefined {
 const mediaKey = (src: string) =>
   src.replace(/^\/+/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase();
 
-export const variantUrl = (src: string, width: number) => `${MEDIA_BASE}${mediaKey(src)}-${width}.webp`;
-export const ogUrl = (src: string) => `${MEDIA_BASE}${mediaKey(src)}-og.jpg`;
+const variantUrl = (src: string, width: number) => `${MEDIA_BASE}${mediaKey(src)}-${width}.webp`;
+const ogUrl = (src: string) => `${MEDIA_BASE}${mediaKey(src)}-og.jpg`;
 
 /** Widths generated for an uploaded image of the given original width. */
-export function uploadWidths(originalWidth: number): number[] {
+function uploadWidths(originalWidth: number): number[] {
   const cap = Math.min(originalWidth, UPLOAD_MAX);
   return [...new Set([...UPLOAD_WIDTHS.filter((width) => width < cap), cap])];
 }

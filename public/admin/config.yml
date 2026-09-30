@@ -3,7 +3,7 @@
 #  Guía de uso en español: docs/CMS.md
 #
 #  IMPORTANTE: los nombres de campo (`name`) deben coincidir EXACTAMENTE con
-#  los esquemas de src/lib/albums/schema.ts y src/lib/pages/schema.ts.
+#  los esquemas de src/lib/schemas.ts.
 #  Si se cambia uno, hay que cambiar el otro o la compilación de Astro falla.
 # ─────────────────────────────────────────────────────────────────────────────
 

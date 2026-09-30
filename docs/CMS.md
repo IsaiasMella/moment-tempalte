@@ -4,7 +4,8 @@ El sitio incluye un panel en **`/admin/`** para editar álbumes, páginas y dato
 
 - Configuración del panel: `public/admin/config.yml`
 - Página del panel: `src/pages/admin/index.astro`
-- Vista previa de álbumes con el diseño real: `public/admin/preview.js`
+- Vista previa de álbumes con el diseño real: `public/admin/preview.js` (reproduce el marcado de `src/components/album/`; el CSS del sitio lo recibe de `src/pages/admin/index.astro`)
+- Esquemas que validan lo que guarda el panel: `src/lib/schemas.ts` (registrados en `src/content.config.ts`)
 - Fotos subidas desde el panel: `public/uploads/`
 
 El idioma del panel sigue al del navegador: con el navegador en español se muestra en español. Se puede cambiar desde el menú de la cuenta → **Configuración**.
@@ -125,10 +126,10 @@ Quien edite necesita una **cuenta de GitHub con permiso de escritura** en el rep
 
 - **Galerías: se agrega foto por foto.** Cada foto de una galería tiene su propia descripción, epígrafe y crédito, así que no existe un botón para crear muchas entradas de galería de una vez. Para agilizar, subir primero todas las fotos juntas en **Recursos** y después elegirlas.
 - **Modo local solo en Chrome/Edge** (escritorio). En el sitio publicado funciona en cualquier navegador moderno, también en el celular.
-- **Sin vista previa con el diseño real.** El panel muestra un formulario; para ver cómo queda, recargar el sitio local o esperar la publicación.
+- **Vista previa:** los álbumes tienen vista previa con el diseño real (portada, textos, citas, fotos y galerías; la disposición final de las galerías se calcula en el sitio). Páginas y Configuración no tienen vista previa propia: usar **Ver en el sitio**.
 - **Cada guardado en producción es un commit** y dispara una nueva publicación del sitio (puede tardar un par de minutos en verse).
 - **Cambiar el título de un álbum no cambia su dirección.** La dirección (`/story/…/`) se fija al crearlo, para no romper enlaces ya compartidos. Para cambiarla hay que renombrar el archivo en `src/content/albums/`.
 - **Etiquetas:** solo Destination, Elopements e Intimate tienen página propia; por eso el panel ofrece solo esas.
 - **Formato de textos:** en los bloques de texto de los álbumes solo se usan negrita, cursiva y enlaces; en Estudio y Privacidad también títulos, listas y citas.
 - **Las fotos originales del tema** (`public/_astro/`) se ven en Recursos como solo lectura; se pueden reutilizar pero no borrar desde el panel.
-- **No borrar ni renombrar campos** en `config.yml` sin cambiar también los esquemas en `src/lib/albums/schema.ts` y `src/lib/pages/schema.ts`: si no coinciden, la compilación falla.
+- **No borrar ni renombrar campos** en `config.yml` sin cambiar también los esquemas en `src/lib/schemas.ts`: si no coinciden, la compilación falla.

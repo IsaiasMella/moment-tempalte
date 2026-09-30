@@ -24,14 +24,14 @@ const optionalText = z.string().trim().optional().nullable().transform((value) =
  * Images are public paths: existing photographs live in /_astro/…,
  * CMS uploads in /uploads/… (public/uploads).
  */
-export const imageSchema = z.object({
+const imageSchema = z.object({
   src: trimmed.min(1),
   alt: trimmed.default(''),
   caption: optionalText,
   credit: optionalText,
 });
 
-export const blockSchema = z.discriminatedUnion('type', [
+const blockSchema = z.discriminatedUnion('type', [
   /** Paragraphs in Markdown (blank line = new paragraph; **bold**, *italic*, [links](/url)). */
   z.object({ type: z.literal('text'), body: trimmed.min(1) }),
   /** Section heading (h2); its anchor id is generated from the text. */
@@ -76,6 +76,8 @@ export const albumSchema = z.object({
 export type Album = z.infer<typeof albumSchema>;
 export type AlbumBlock = z.infer<typeof blockSchema>;
 export type AlbumImage = z.infer<typeof imageSchema>;
+/** A photograph handed to Figure/Gallery: caption and credit are optional. */
+export type PhotoProps = Pick<AlbumImage, 'src' | 'alt'> & Partial<Pick<AlbumImage, 'caption' | 'credit'>>;
 
 // ---------------------------------------------------------------- pages & settings
 
@@ -87,7 +89,7 @@ export type Link = z.infer<typeof link>;
 
 const seo = z.object({ title: text, description: text }).default({ title: '', description: '' });
 
-export const socialPlatforms = [
+const socialPlatforms = [
   'instagram', 'pinterest', 'email', 'phone', 'facebook', 'tiktok', 'youtube',
   'vimeo', 'whatsapp', 'linkedin', 'threads', 'x', 'behance', 'website',
 ] as const;
