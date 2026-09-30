@@ -1,0 +1,23 @@
+---
+/**
+ * Story pages, generated from the albums collection (src/content/albums/<slug>.md).
+ * A reference story supplies the shell (head, header, footer, lightbox, scripts);
+ * its <main> and story metadata are rebuilt from the album.
+ */
+import { getAlbums } from '../../lib/albums/data';
+import { renderStory, SHELL_FILE } from '../../lib/albums/render';
+import { renderReference } from '../../lib/reference';
+import { applyTransforms } from '../../lib/transforms';
+
+export async function getStaticPaths() {
+  const albums = await getAlbums();
+  return albums.map((album) => ({ params: { slug: album.slug }, props: { album, albums } }));
+}
+
+const { album, albums } = Astro.props;
+const origin = Astro.site?.origin ?? Astro.url.origin;
+const route = `story/${album.slug}/`;
+const shell = renderReference(SHELL_FILE, origin);
+const html = await applyTransforms(route, await renderStory(shell, album, albums, origin));
+---
+<Fragment set:html={html} />

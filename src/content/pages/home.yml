@@ -11,7 +11,7 @@ studio:
   buttonLink: /studio/
   figures:
     - label: Stories
-      value: "19"
+      value: "{stories}"
     - label: Since
       value: "2024"
 testimonials:

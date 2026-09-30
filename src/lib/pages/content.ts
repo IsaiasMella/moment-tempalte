@@ -1,4 +1,5 @@
 import type { ContactPage, HomePage, PricingPage, PrivacyPage, SiteSettings, StudioPage } from './schema';
+import { albumSummariesSync } from '../albums/data';
 import { esc, escAttr, markdown, paragraphs, renderImg, replaceOnce } from './html';
 
 const cidOf = (html: string) => html.match(/ data-astro-cid-\w+/)?.[0] ?? '';
@@ -40,7 +41,7 @@ export function home(html: string, data: HomePage): string {
     section = replaceOnce(section, /<a class="(btn [^"]*)" href="[^"]*"([^>]*)><span>[\s\S]*?<\/span><\/a>/, (_, cls, attrs) => button(cls, s.buttonLink, s.buttonLabel, attrs), 'home studio button');
     section = replaceOnce(section, /<dl class="home-studio-figures"([^>]*)>[\s\S]*?<\/dl>/, (_, attrs) =>
       s.figures.length
-        ? `<dl class="home-studio-figures"${attrs}>${s.figures.map(f => `<div class="home-studio-figure"><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('')}</dl>`
+        ? `<dl class="home-studio-figures"${attrs}>${s.figures.map(f => `<div class="home-studio-figure"><dt>${esc(f.label)}</dt><dd>${esc(f.value.replaceAll('{stories}', String(albumSummariesSync().length)))}</dd></div>`).join('')}</dl>`
         : '',
     'home studio figures');
     return section;
