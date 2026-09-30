@@ -67,9 +67,9 @@ output:
   omit_empty_optional_fields: true
 
 editor:
-  # Sin panel de vista previa: el formulario ocupa todo el ancho.
-  # Para ver el resultado real, usar el enlace "Ver en el sitio" o recargar la web.
-  preview: false
+  # Vista previa con el diseño real del sitio (ver /admin/preview.js).
+  # Solo los álbumes la usan; Páginas y Configuración la desactivan abajo.
+  preview: true
 
 # Formato por defecto de los editores de texto enriquecido.
 field_defaults:
@@ -348,6 +348,8 @@ collections:
   # ───────────────────────────── PÁGINAS ─────────────────────────────
   - name: pages
     label: Páginas
+    editor:
+      preview: false # usar "Ver en el sitio"
     label_singular: Página
     icon: web
     description: Textos e imágenes de las páginas fijas del sitio.
@@ -672,6 +674,8 @@ collections:
   # ─────────────────────────── CONFIGURACIÓN ───────────────────────────
   - name: settings
     label: Configuración
+    editor:
+      preview: false # usar "Ver en el sitio"
     label_singular: Configuración
     icon: settings
     description: Datos generales, redes, menú, pie de página y formularios.

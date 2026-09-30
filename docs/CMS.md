@@ -4,6 +4,7 @@ El sitio incluye un panel en **`/admin/`** para editar álbumes, páginas y dato
 
 - Configuración del panel: `public/admin/config.yml`
 - Página del panel: `src/pages/admin/index.astro`
+- Vista previa de álbumes con el diseño real: `public/admin/preview.js`
 - Fotos subidas desde el panel: `public/uploads/`
 
 El idioma del panel sigue al del navegador: con el navegador en español se muestra en español. Se puede cambiar desde el menú de la cuenta → **Configuración**.
